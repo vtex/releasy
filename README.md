@@ -1,6 +1,6 @@
 # Releasy
 
-Releasy helps you release versions of your node package.json easily!
+Releasy helps you release versions of your node package.json-based projects easily!
 
 ### Usage:
 
