@@ -11,7 +11,7 @@ if (['major', 'minor', 'patch', 'promote'].indexOf(arguments[2]) != -1) {
 }
 
 program.version('1.0.0')
-    .usage('releasy (major|minor|*patch*) [options]')
+    .usage('(major|minor|*patch*) [options]')
     .option('-f, --filename [path]', 'Your package manifest file [package.json]', 'package.json')
     .option('-t, --tag-name [tag]', 'The prerelease tag in your version [beta]', 'beta')
     .option('--npm-tag [tag]', 'Tag option for npm publish', '')

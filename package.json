@@ -28,5 +28,6 @@
     "q": "~0.9.7",
     "prompt": "~0.2.12",
     "semver": "~2.2.1"
-  }
+  },
+  "preferGlobal": true
 }
