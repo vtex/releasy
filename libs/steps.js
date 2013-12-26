@@ -39,7 +39,7 @@ var steps = {
     },
     bump: function (config) {
         config.pkg.version = config.newVersion;
-        var promise = config.dryRun ? Q() : Q.nfcall(fs.writeFileSync, config.filename, JSON.stringify(config.pkg, null, 2) + '\n');
+        var promise = config.dryRun ? Q() : Q.nfcall(fs.writeFile, config.filename, JSON.stringify(config.pkg, null, 2) + '\n');
         return promise.then(function(result){
             console.log('Version bumped to ' + config.newVersion);
             return result;

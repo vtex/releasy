@@ -14,10 +14,8 @@ program.version('1.0.0')
     .usage('releasy (major|minor|*patch*) [options]')
     .option('-f, --filename [path]', 'Your package manifest file [package.json]', 'package.json')
     .option('-t, --tag-name [tag]', 'The prerelease tag in your version [beta]', 'beta')
-    // commit message .option('-t, --tag [tag]', 'The prerelease tag in your version. For no prerelease, use "-t stable" or "--stable" [beta] ', 'beta')
-    // tag message .option('-t, --tag [tag]', 'The prerelease tag in your version. For no prerelease, use "-t stable" or "--stable" [beta] ', 'beta')
-    // npm tag .option('-t, --tag [tag]', 'The prerelease tag in your version. For no prerelease, use "-t stable" or "--stable" [beta] ', 'beta')
-    // npm folder .option('-t, --tag [tag]', 'The prerelease tag in your version. For no prerelease, use "-t stable" or "--stable" [beta] ', 'beta')
+    .option('--npm-tag [tag]', 'Tag option for npm publish', '')
+    .option('-f, --folder [folder]', 'Folder option for npm publish', '')
     .option('--stable', 'Mark this as a relese stable (no prerelease tag)')
     .option('--no-commit', 'Do not commit the version change')
     .option('--no-tag', 'Do not tag the version change')
@@ -33,13 +31,14 @@ console.log("New version: " + config.newVersion);
 
 // Pachamama v2 requires that version tags start with a 'v' character.
 config.tagName = 'v' + config.newVersion;
-config.commitMessage = program.commitMessage;
-config.tagMessage = program.tagMessage;
+config.commitMessage = 'Release ' + config.tagName;
+config.tagMessage = 'Release ' + config.tagName;
 config.npmTag = program.npmTag;
 config.npmFolder = program.npmFolder;
 config.dryRun = program.dryRun;
 
 var release = function (config, options) {
+    console.log("Starting release...");
     var promise = steps.bump(config);
     if (options.commit) {
         promise = promise.then(function () {
@@ -61,11 +60,14 @@ var release = function (config, options) {
     }
     if (options.npm) {
         promise = promise.then(function () {
-            return steps.push(config)
+            return steps.publish(config)
         });
     }
     promise = promise.then(function(){
        console.log("All steps finished successfuly.");
+    });
+    promise.fail(function(reason){
+      console.log("Failed to release.", reason);
     });
     return promise;
 };
