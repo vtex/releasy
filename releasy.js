@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 var prompt = require('prompt'),
     program = require('commander'),
     steps = require('./libs/steps');
