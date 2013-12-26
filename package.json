@@ -1,6 +1,6 @@
 {
   "name": "releasy",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "CLI tool to release node applications with tag and auto semver bump",
   "main": "releasy.js",
   "bin": "releasy.js",
