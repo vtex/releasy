@@ -1,0 +1,32 @@
+{
+  "name": "releasy",
+  "version": "0.0.0",
+  "description": "CLI tool to release node applications with tag and auto semver bump",
+  "main": "releasy.js",
+  "bin": "releasy.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/vtex/releasy.git"
+  },
+  "keywords": [
+    "CLI",
+    "releasy",
+    "release",
+    "semver"
+  ],
+  "author": "Guiherme Rodrigues",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vtex/releasy/issues"
+  },
+  "homepage": "https://github.com/vtex/releasy",
+  "dependencies": {
+    "commander": "~2.1.0",
+    "q": "~0.9.7",
+    "prompt": "~0.2.12",
+    "semver": "~2.2.1"
+  }
+}
