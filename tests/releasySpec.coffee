@@ -11,8 +11,3 @@ describe 'steps', ->
   it "should exist", (done) ->
     expect(deploy).to.be.ok()
     done()
-
-describe 'setup', ->
-  it "blabla", (done) ->
-#    expect.
-    done()
