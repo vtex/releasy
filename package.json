@@ -5,7 +5,7 @@
   "main": "releasy.js",
   "bin": "releasy.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "make test"
   },
   "repository": {
     "type": "git",
