@@ -29,5 +29,8 @@
     "prompt": "~0.2.12",
     "semver": "~2.2.1"
   },
-  "preferGlobal": true
+  "preferGlobal": true,
+  "devDependencies": {
+    "should": "~2.1.1"
+  }
 }
