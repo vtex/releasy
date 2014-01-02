@@ -3,6 +3,7 @@ releasy = require '../releasy.js'
 steps = require '../libs/steps.js'
 semver = require 'semver'
 testpkg = require '../testpackage.json'
+testpkgbeta = require '../testpackagebeta.json'
 
 describe 'steps', ->
 
@@ -41,6 +42,24 @@ describe 'pkg.version', ->
     ).should.not.throw()
 
     testpkg.version = testpkg.version.replace('-beta', '')
+
+    done()
+
+describe 'pkg.version', ->
+
+  it 'should be promoted', (done) ->
+
+    steps.setup('testpackagebeta.json', 'promote', '')
+    testpkgbeta.version.should.equal('1.0.0-beta')
+
+    done()
+
+describe 'steps.setup', ->
+
+  it 'should only increment if other types are given as parameter', (done) ->
+
+    steps.setup('testpackage.json', '', '')
+    newVersion.should.equal('1.0.1')
 
     done()
 
