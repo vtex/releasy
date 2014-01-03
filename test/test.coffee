@@ -41,8 +41,6 @@ describe 'pkg.version', ->
       steps.setup('testpackage.json', 'promote', '')
     ).should.not.throw()
 
-    testpkg.version = testpkg.version.replace('-beta', '')
-
     done()
 
 describe 'pkg.version', ->
@@ -54,12 +52,21 @@ describe 'pkg.version', ->
 
     done()
 
-describe 'steps.setup', ->
+# describe 'steps.setup', ->
 
-  it 'should only increment if other types are given as parameter', (done) ->
+#   it 'should increment if other types are given as parameter', (done) ->
 
-    steps.setup('testpackage.json', '', '')
-    newVersion.should.equal('1.0.1')
+#     steps.setup('testpackage.json', '', '')
+#     newVersion.should.equal('1.0.1')
 
-    done()
+#     done()
 
+# describe 'run', ->
+
+#   it 'should dry-run', (done) ->
+
+#     dryRun = true
+#     steps.run(cmd, successMessage, dryRun)
+#     promise.should.equal(Q())
+
+#     done()

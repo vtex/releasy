@@ -56,15 +56,7 @@
     });
   });
 
-  describe('steps.setup', function() {
-    return it('should only increment if other types are given as parameter', function(done) {
-      steps.setup('testpackage.json', '', '');
-      newVersion.should.equal('1.0.1');
-      return done();
-    });
-  });
-
-}).call(this);
+  }).call(this);
 
 /*
 //@ sourceMappingURL=test.map
