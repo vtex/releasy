@@ -11,7 +11,7 @@ if (['major', 'minor', 'patch', 'promote'].indexOf(arguments[2]) != -1) {
     arguments = arguments.slice(0, 2).concat(arguments.slice(3));
 }
 
-program.version('1.0.0')
+program.version('1.1.1')
     .usage('(major|minor|*patch*) [options]')
     .option('-f, --filename [path]', 'Your package manifest file [package.json]', 'package.json')
     .option('-t, --tag-name [tag]', 'The prerelease tag in your version [beta]', 'beta')
