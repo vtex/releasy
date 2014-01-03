@@ -27,8 +27,8 @@ program.version('1.0.0')
     .parse(arguments);
 
 var config = steps.setup(program.filename, type, program.stable ? 'stable' : program.tagName);
-console.log("Old version: " + config.pkg.version);
-console.log("New version: " + config.newVersion);
+console.log("Old version: " + config.pkg.version.bold);
+console.log("New version: " + config.newVersion.bold.yellow);
 
 // Pachamama v2 requires that version tags start with a 'v' character.
 config.tagName = 'v' + config.newVersion;
