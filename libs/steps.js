@@ -55,7 +55,7 @@ var steps = {
         return steps.run('git tag ' + config.tagName + ' -m "' + config.tagMessage + '"', 'New git tag created: ' + config.tagName, config.dryRun);
     },
     push: function (config) {
-        return steps.run('git push --tags', 'pushed commit and tags to remote', config.dryRun);
+        return steps.run('git push --tags HEAD', 'pushed commit and tags to remote', config.dryRun);
     },
     publish: function (config) {
         var cmd = 'npm publish';
