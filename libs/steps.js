@@ -55,16 +55,16 @@ var steps = {
         return steps.run('git tag ' + config.tagName + ' -m "' + config.tagMessage + '"', 'Tag created: ' + config.tagName, config.dryRun);
     },
     push: function (config) {
-		var promise = steps.run('git version', '', config.dryRun).then(function(stdout){
-			var gitPushCommand = 'git push && git push --tags';
-			if (/(git version 1\.8)|(git version 1\.9)/.test(stdout)){
-				gitPushCommand = 'git push --follow-tags';
-			}
-			return gitPushCommand;
-		});
-		promise = promise.then(function(gitPushCommand){
-			return steps.run(gitPushCommand, 'Pushed commit and tags', config.dryRun)
-		});
+        var promise = steps.run('git version', '', config.dryRun).then(function(stdout){
+            var gitPushCommand = 'git push && git push --tags';
+            if (/(git version 1\.8\.3)|(git version 1\.8\.4)/.test(stdout)){
+              gitPushCommand = 'git push --follow-tags';
+            }
+            return gitPushCommand;
+        });
+        promise = promise.then(function(gitPushCommand){
+            return steps.run(gitPushCommand, 'Pushed commit and tags', config.dryRun)
+        });
         return promise;
     },
     publish: function (config) {
@@ -78,6 +78,40 @@ var steps = {
             cmd += ' ' + config.npmFolder
         }
         return steps.run(cmd, msg, config.dryRun);
+    },
+    release: function (config, options) {
+      console.log("Starting release...");
+      var promise = steps.bump(config);
+      if (options.commit) {
+        promise = promise.then(function () {
+          return steps.add(config)
+        });
+        promise = promise.then(function () {
+          return steps.commit(config)
+        });
+      }
+      if (options.tag) {
+        promise = promise.then(function () {
+          return steps.tag(config)
+        });
+      }
+      if (options.push) {
+        promise = promise.then(function () {
+          return steps.push(config)
+        });
+      }
+      if (options.npm) {
+        promise = promise.then(function () {
+          return steps.publish(config)
+        });
+      }
+      promise = promise.then(function(){
+        console.log("All steps finished successfuly.");
+      });
+      promise.fail(function(reason){
+        console.log("Failed to release.", reason);
+      });
+      return promise;
     }
 };
 
