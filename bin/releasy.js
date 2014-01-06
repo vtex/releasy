@@ -25,7 +25,7 @@ program.version('1.2.0')
 	.option('-s, --silent', 'Dont ask for confirmation')
 	.parse(arguments);
 
-arguments.type = type;
-arguments.cli = true;
+program.type = type;
+program.cli = true;
 
-return new Releasy(arguments);
+return new Releasy(program);
