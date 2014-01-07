@@ -1,4 +1,6 @@
 should = require 'should'
+sinon = require('sinon')
+EventEmitter = require('events').EventEmitter
 Releasy = require '../libs/releasy.js'
 steps = require '../libs/steps.js'
 semver = require 'semver'
@@ -50,9 +52,8 @@ describe 'releasy', ->
 
   it 'should call all steps in dry run', (done) ->
     releasy = new Releasy({dryRun: true, filename: 'test/testpackage.json', type: 'patch'});
-    # create spies on releasy.steps functions...
     releasy.promise.then ->
-      # assert that spies were called
+      assert(callback.called)
       done()
     releasy.promise.fail (reason) ->
       done(new Error(reason))
