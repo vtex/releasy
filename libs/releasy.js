@@ -3,10 +3,10 @@ var steps = require('./steps'),
 
 module.exports = function(opts) {
   // Expose this to unit testing
-  this.steps = steps;
+  this.steps = opts.steps || steps;
   this.promise = undefined;
 
-	var config = steps.setup(opts.filename, opts.type, opts.stable ? 'stable' : opts.tagName);
+	var config = this.steps.setup(opts.filename, opts.type, opts.stable ? 'stable' : opts.tagName);
 	console.log("Old version: " + config.pkg.version.bold);
 	console.log("New version: " + config.newVersion.bold.yellow);
 
@@ -20,7 +20,7 @@ module.exports = function(opts) {
 
 	// No prompt necessary, release and finish.
 	if (!opts.cli || opts.silent) {
-    this.promise = steps.release(config, opts);
+    this.promise = this.steps.release(config, opts);
     return this;
 	}
 
@@ -41,7 +41,7 @@ module.exports = function(opts) {
 		if (err || !result.confirm) {
 			return console.log("Cancelled by user");
 		}
-    steps.release(config, opts);
+    this.steps.release(config, opts);
 	});
 
   return this;

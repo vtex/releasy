@@ -51,9 +51,20 @@ describe 'releasy', ->
     done()
 
   it 'should call all steps in dry run', (done) ->
-    releasy = new Releasy({dryRun: true, filename: 'test/testpackage.json', type: 'patch'});
+    options = 
+      dryRun: true
+      filename: 'test/testpackage.json'
+      type: 'patch'
+      steps: steps
+
+    sinon.spy(steps, "setup")
+    sinon.spy(steps, "release")
+
+    releasy = new Releasy(options)
+
     releasy.promise.then ->
-      assert(callback.called)
+      steps.setup.called.should.be.true
+      steps.release.called.should.be.true
       done()
     releasy.promise.fail (reason) ->
       done(new Error(reason))

@@ -31,6 +31,7 @@
   },
   "preferGlobal": true,
   "devDependencies": {
-    "should": "~2.1.1"
+    "should": "~2.1.1",
+    "sinon": "~1.7.3"
   }
 }
