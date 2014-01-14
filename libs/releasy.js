@@ -7,8 +7,10 @@ module.exports = function(opts) {
   this.promise = undefined;
 
 	var config = this.steps.setup(opts.filename, opts.type, opts.stable ? 'stable' : opts.tagName);
-	console.log("Old version: " + config.pkg.version.bold);
-	console.log("New version: " + config.newVersion.bold.yellow);
+  if (!opts.quiet) {
+  	console.log("Old version: " + config.pkg.version.bold);
+  	console.log("New version: " + config.newVersion.bold.yellow);
+  }
 
 	// Pachamama v2 requires that version tags start with a 'v' character.
 	config.tagName = 'v' + config.newVersion;
@@ -17,6 +19,7 @@ module.exports = function(opts) {
 	config.npmTag = opts.npmTag;
 	config.npmFolder = opts.npmFolder;
 	config.dryRun = opts.dryRun;
+  config.quiet = opts.quiet;
 
 	// No prompt necessary, release and finish.
 	if (!opts.cli || opts.silent) {

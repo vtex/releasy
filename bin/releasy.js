@@ -23,9 +23,10 @@ program.version('1.2.0')
   .option('-n, --npm', 'Publish to npm')
   .option('-d, --dry-run', 'Dont do anything, just show what would be done')
   .option('-s, --silent', 'Dont ask for confirmation')
+  .option('-q, --quiet', "Don't write messages to console")
   .parse(arguments);
 
 program.type = type;
 program.cli = true;
 
-return new Releasy(program); 
+return new Releasy(program);

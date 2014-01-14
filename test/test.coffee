@@ -56,6 +56,7 @@ describe 'releasy', ->
       filename: 'test/testpackage.json'
       type: 'patch'
       steps: steps
+      quiet: true
 
     sinon.spy(steps, "setup")
     sinon.spy(steps, "release")
