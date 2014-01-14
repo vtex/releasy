@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 var program = require('commander'),
-  Releasy = require('../libs/releasy');
+  Releasy = require('../libs/releasy'),
+  pkg = require('../package.json');
 
 var type = 'patch';
 var arguments = process.argv;
@@ -10,7 +11,7 @@ if (['major', 'minor', 'patch', 'promote'].indexOf(arguments[2]) != -1) {
   arguments = arguments.slice(0, 2).concat(arguments.slice(3));
 }
 
-program.version('1.2.0')
+program.version(pkg.version)
   .usage('(major|minor|*patch*) [options]')
   .option('-f, --filename [path]', 'Your package manifest file [package.json]', 'package.json')
   .option('-t, --tag-name [tag]', 'The prerelease tag in your version [beta]', 'beta')
