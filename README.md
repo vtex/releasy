@@ -1,6 +1,6 @@
 # Releasy
 
-Releasy helps you release versions of your node package.json-based projects easily!
+Releasy helps you release versions of your projects easily!
 
 ### Usage:
 
@@ -62,3 +62,32 @@ To run silently, use `-s`:
 
     Old version: 1.0.0
     New version: 1.0.1-beta
+
+## Different version files
+
+Releasy supports both NodeJS' package.json and .NET C#'s AssemblyInfo.cs.
+
+The default behavior looks for a `package.json` file:
+
+    $ releasy		# uses package.json
+
+A different AssemblyInfo or package.json can be specified:
+
+    $ releasy --filename anotherfile.json
+		# or
+	$ releasy --filename MyAssemblyInfo.cs
+
+If the default `package.json` file is not found, `src/ProductAssemblyInfo.cs` is used as fallback:
+
+	# granted package.json doesn't exist
+	$ releasy		# uses src/ProductAssemblyInfo.cs
+
+If your `package.json` has a field named `assemblyInfo`, it will be used to point to the AssemblyInfo file:
+
+```json
+{
+  "assemblyInfo": "OtherAssemblyInfo.cs"
+}
+```
+	# given the package.json above
+	$ releasy		# uses OterAssemblyInfo.cs
