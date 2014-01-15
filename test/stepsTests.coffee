@@ -1,4 +1,5 @@
 should = require 'should'
+semver = require 'semver'
 require 'shelljs/global'
 
 steps = require '../libs/steps.js'
@@ -41,61 +42,80 @@ describe 'Steps', ->
       provider.should.be.instanceOf CsharpVersionProvider
       provider.filePath.should.equal 'MyAssemblyInfo.cs'
 
-  describe 'setup from stable version', ->
-    before ->
-      JSON.stringify(version: '1.2.3').to 'test/package.json'
+  describe 'setup', ->
+    it 'should not promote a stable version', (done) ->
+      # arrange
+      provider = readVersion: -> semver '1.2.3'
 
-    after ->
-      rm 'test/package.json'
-
-    it 'should not promote', (done) ->
+      # act & assert
       ( ->
-        steps.setup 'test/package.json', 'promote', ''
+        steps.setup provider, 'promote', ''
       ).should.throw()
       done()
 
-    it 'should bump patch', (done) ->
+    it 'should set config', (done) ->
+      # arrange
+      provider = readVersion: -> semver '1.2.3'
+
       # act
-      config = steps.setup 'test/package.json', 'patch', ''
+      config = steps.setup provider, 'patch', ''
+
+      # assert
+      config.newVersion.should.equal '1.2.4'
+      config.oldVersion.should.equal '1.2.3'
+      config.versionProvider.should.equal provider
+      done()
+
+    it 'should bump patch', (done) ->
+      # arrange
+      provider = readVersion: -> semver '1.2.3'
+
+      # act
+      config = steps.setup provider, 'patch', ''
 
       # assert
       config.newVersion.should.equal '1.2.4'
       done()
 
     it 'should bump minor', (done) ->
+      # arrange
+      provider = readVersion: -> semver '1.2.3'
+
       # act
-      config = steps.setup 'test/package.json', 'minor', ''
+      config = steps.setup provider, 'minor', ''
 
       # assert
       config.newVersion.should.equal '1.3.0'
       done()
 
     it 'should bump major', (done) ->
+      # arrange
+      provider = readVersion: -> semver '1.2.3'
+
       # act
-      config = steps.setup 'test/package.json', 'major', ''
+      config = steps.setup provider, 'major', ''
 
       # assert
       config.newVersion.should.equal '2.0.0'
       done()
 
     it 'should create prerelease', (done) ->
+      # arrange
+      provider = readVersion: -> semver '1.2.3'
+
       # act
-      config = steps.setup 'test/package.json', 'patch', 'beta'
+      config = steps.setup provider, 'patch', 'beta'
 
       # assert
       config.newVersion.should.equal '1.2.4-beta'
       done()
 
-  describe 'setup from prerelease version', ->
-    before ->
-      JSON.stringify(version: '1.2.3-beta.4').to 'test/betapackage.json'
+    it 'should promote prerelease', (done) ->
+      # arrange
+      provider = readVersion: -> semver '1.2.3-beta.4'
 
-    after ->
-      rm 'test/betapackage.json'
-
-    it 'should promote', (done) ->
       # act
-      config = steps.setup 'test/betapackage.json', 'promote', ''
+      config = steps.setup provider, 'promote', ''
 
       # assert
       config.newVersion.should.equal '1.2.3'

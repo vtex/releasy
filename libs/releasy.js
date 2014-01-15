@@ -7,9 +7,11 @@ module.exports = function(opts) {
   this.steps = opts.steps || steps;
   this.promise = undefined;
 
-	var config = this.steps.setup(opts.filename, opts.type, opts.stable ? 'stable' : opts.tagName);
+  	var versionProvider = this.steps.pickVersionProvider(opts.filename);
+
+	var config = this.steps.setup(versionProvider, opts.type, opts.stable ? 'stable' : opts.tagName);
   if (!opts.quiet) {
-  	console.log("Old version: " + config.pkg.version.bold);
+  	console.log("Old version: " + config.oldVersion.bold);
   	console.log("New version: " + config.newVersion.bold.yellow);
   }
 
