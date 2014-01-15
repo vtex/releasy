@@ -8,6 +8,12 @@ var NodeVersionProvider = require('./nodeVersionProvider.js');
 
 var steps = {
     pickVersionProvider: function(fileName) {
+        if (fileName === 'package.json' && !test('-e', fileName)) {
+            fileName = 'src/ProductAssemblyInfo.cs';
+        }
+        if (!test('-e', fileName)) {
+            throw new Error('Version file "' + fileName + '" not found');
+        }
         if (/\.cs$/.test(fileName)) {
             provider = CsharpVersionProvider;
         } else {

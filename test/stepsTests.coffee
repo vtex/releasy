@@ -10,37 +10,68 @@ createFile = (filePath, contents) ->
   contents.to filePath
 
 describe 'Steps', ->
+  before ->
+    cd 'test'
+
+  after ->
+    if test '-e', 'package.json' then rm '-f', 'package.json'
+    if test '-e', 'src/ProductAssemblyInfo.json' then rm '-f', 'package.json'
+    cd '..'
+
   describe 'picking version provider', ->
     it 'should return C# provider if file has .cs extension', ->
       # act
+      "".to 'SomeFile.cs'
       provider = steps.pickVersionProvider 'SomeFile.cs'
 
       # assert
       provider.should.be.instanceOf CsharpVersionProvider
       provider.filePath.should.equal 'SomeFile.cs'
+      rm 'SomeFile.cs'
 
     it 'should return NodeJS provider if file has .json extension', ->
       # arrange
-      "{}".to 'test/package.json'
+      "{}".to 'package.json'
 
       # act
-      provider = steps.pickVersionProvider 'test/package.json'
+      provider = steps.pickVersionProvider 'package.json'
 
       # assert
       provider.should.be.instanceOf NodeVersionProvider
-      provider.filePath.should.equal 'test/package.json'
-      rm '-f', 'test/package.json'
+      provider.filePath.should.equal 'package.json'
 
     it 'should return C# provider if package.json has AssemblyInfo field', ->
       # arrange
-      JSON.stringify(assemblyInfo: 'MyAssemblyInfo.cs').to 'test/package.json'
+      JSON.stringify(assemblyInfo: 'MyAssemblyInfo.cs').to 'package.json'
 
       # act
-      provider = steps.pickVersionProvider 'test/package.json'
+      provider = steps.pickVersionProvider 'package.json'
 
       # assert
       provider.should.be.instanceOf CsharpVersionProvider
       provider.filePath.should.equal 'MyAssemblyInfo.cs'
+      rm '-f', 'MyAssemblyInfo.cs'
+
+    it 'should return C# provider if package.json does not exist', ->
+      # arrange
+      if test '-e', 'package.json' then rm '-f', 'package.json'
+      mkdir 'src'
+      "".to 'src/ProductAssemblyInfo.cs'
+
+      # act
+      provider = steps.pickVersionProvider 'package.json'
+
+      # assert
+      provider.should.be.instanceOf CsharpVersionProvider
+      provider.filePath.should.equal 'src/ProductAssemblyInfo.cs'
+      rm '-rf', 'src'
+
+    it 'should throw error if file does not exist', ->
+      # act & assert
+      ( ->
+        steps.pickVersionProvider 'mypackage.json'
+      ).should.throw /not found$/
+
 
   describe 'setup', ->
     it 'should not promote a stable version', (done) ->
