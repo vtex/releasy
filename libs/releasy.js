@@ -3,6 +3,7 @@ var steps = require('./steps'),
 
 module.exports = function(opts) {
   // Expose this to unit testing
+  _this = this;
   this.steps = opts.steps || steps;
   this.promise = undefined;
 
@@ -44,7 +45,7 @@ module.exports = function(opts) {
 		if (err || !result.confirm) {
 			return console.log("Cancelled by user");
 		}
-    this.steps.release(config, opts);
+    _this.steps.release(config, opts);
 	});
 
   return this;
