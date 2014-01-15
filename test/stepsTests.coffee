@@ -40,3 +40,63 @@ describe 'Steps', ->
       # assert
       provider.should.be.instanceOf CsharpVersionProvider
       provider.filePath.should.equal 'MyAssemblyInfo.cs'
+
+  describe 'setup from stable version', ->
+    before ->
+      JSON.stringify(version: '1.2.3').to 'test/package.json'
+
+    after ->
+      rm 'test/package.json'
+
+    it 'should not promote', (done) ->
+      ( ->
+        steps.setup 'test/package.json', 'promote', ''
+      ).should.throw()
+      done()
+
+    it 'should bump patch', (done) ->
+      # act
+      config = steps.setup 'test/package.json', 'patch', ''
+
+      # assert
+      config.newVersion.should.equal '1.2.4'
+      done()
+
+    it 'should bump minor', (done) ->
+      # act
+      config = steps.setup 'test/package.json', 'minor', ''
+
+      # assert
+      config.newVersion.should.equal '1.3.0'
+      done()
+
+    it 'should bump major', (done) ->
+      # act
+      config = steps.setup 'test/package.json', 'major', ''
+
+      # assert
+      config.newVersion.should.equal '2.0.0'
+      done()
+
+    it 'should create prerelease', (done) ->
+      # act
+      config = steps.setup 'test/package.json', 'patch', 'beta'
+
+      # assert
+      config.newVersion.should.equal '1.2.4-beta'
+      done()
+
+  describe 'setup from prerelease version', ->
+    before ->
+      JSON.stringify(version: '1.2.3-beta.4').to 'test/betapackage.json'
+
+    after ->
+      rm 'test/betapackage.json'
+
+    it 'should promote', (done) ->
+      # act
+      config = steps.setup 'test/betapackage.json', 'promote', ''
+
+      # assert
+      config.newVersion.should.equal '1.2.3'
+      done()
