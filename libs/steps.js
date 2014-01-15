@@ -3,7 +3,24 @@ var exec = require('child_process').exec;
 var fs = require('fs');
 var path = require('path');
 var semver = require('semver');
+var CsharpVersionProvider = require('./csharpVersionProvider.js');
+var NodeVersionProvider = require('./nodeVersionProvider.js');
+
 var steps = {
+    pickVersionProvider: function(fileName) {
+        if (/\.cs$/.test(fileName)) {
+            provider = CsharpVersionProvider;
+        } else {
+            var pkg = JSON.parse(cat(fileName));
+            if (pkg.assemblyInfo) {
+                fileName = pkg.assemblyInfo;
+                provider = CsharpVersionProvider;
+            } else {
+                provider = NodeVersionProvider;
+            }
+        }
+        return new provider(fileName);
+    },
     setup: function(filename, type, prerelease) {
         var pkg = require(path.resolve('./',filename));
         var newVersion = pkg.version;

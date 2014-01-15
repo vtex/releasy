@@ -3,7 +3,7 @@ var path = require('path');
 require('shelljs/global');
 
 module.exports = function(filePath) {
-	this.filePath = path.resolve(filePath);
+	this.filePath = filePath;
 
 	this.readVersion = function() {
 		var pkg = JSON.parse(cat(this.filePath));
