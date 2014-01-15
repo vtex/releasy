@@ -12,39 +12,6 @@ describe 'steps', ->
     steps.should.be.ok
     done()
 
-  describe 'with a stable package.json', ->
-    it 'should not promote and steps.setup should throw error', (done) ->
-      ( ->
-        steps.setup('testpackage.json', 'promote', '')
-      ).should.throw()
-      done()
-
-    it 'should bump patch', (done) ->
-      config = steps.setup('test/testpackage.json', 'patch', '')
-      config.newVersion.should.equal('1.0.1')
-      done()
-
-    it 'should bump minor', (done) ->
-      config = steps.setup('test/testpackage.json', 'minor', '')
-      config.newVersion.should.equal('1.1.0')
-      done()
-
-    it 'should bump major', (done) ->
-      config = steps.setup('test/testpackage.json', 'major', '')
-      config.newVersion.should.equal('2.0.0')
-      done()
-
-    it 'should create prerelease', (done) ->
-      config = steps.setup('test/testpackage.json', 'patch', 'beta')
-      config.newVersion.should.equal('1.0.1-beta')
-      done()
-
-  describe 'with a beta package.json', ->
-    it 'should promote', (done) ->
-      config = steps.setup('test/testpackagebeta.json', 'promote', '')
-      config.newVersion.should.equal('1.0.0')
-      done()
-
 describe 'releasy', ->
   it 'should exist', (done) ->
     Releasy.should.be.ok
