@@ -3,34 +3,55 @@ var exec = require('child_process').exec;
 var fs = require('fs');
 var path = require('path');
 var semver = require('semver');
+var CsharpVersionProvider = require('./csharpVersionProvider.js');
+var NodeVersionProvider = require('./nodeVersionProvider.js');
+
 var steps = {
-    setup: function(filename, type, prerelease) {
-        var pkg = require(path.resolve('./',filename));
-        var newVersion = pkg.version;
-        var versionObj;
+    pickVersionProvider: function(fileName) {
+        if (fileName === 'package.json' && !test('-e', fileName)) {
+            fileName = 'src/ProductAssemblyInfo.cs';
+        }
+        if (!test('-e', fileName)) {
+            throw new Error('Version file "' + fileName + '" not found');
+        }
+        if (/\.cs$/.test(fileName)) {
+            provider = CsharpVersionProvider;
+        } else {
+            var pkg = JSON.parse(cat(fileName));
+            if (pkg.assemblyInfo) {
+                fileName = pkg.assemblyInfo;
+                provider = CsharpVersionProvider;
+            } else {
+                provider = NodeVersionProvider;
+            }
+        }
+        return new provider(fileName);
+    },
+    setup: function(versionProvider, type, prerelease) {
+        var version = versionProvider.readVersion();
         // Support for "promote" predicate, which bumps prerelease to stable, without changing version number.
         if (type === 'promote') {
             // Promote only makes sense when there is a prerelease
-            if (semver(pkg.version).prerelease.length === 0) {
-                throw new Error("The version you are trying to promote to stable (" + pkg.version + ") is already stable.\n")
+            if (version.prerelease.length === 0) {
+                throw new Error("The version you are trying to promote to stable (" + version.format() + ") is already stable.\n")
             }
             else {
-                versionObj = semver(pkg.version);
-                versionObj.prerelease = [];
-                newVersion = versionObj.format();
+                version.prerelease = [];
                 prerelease = 'stable';
             }
         }
         // For other types, simply increment
         else {
-            newVersion = semver.inc(pkg.version, type || 'patch');
+            version = version.inc(type || 'patch');
         }
         if (prerelease && prerelease !== 'stable') {
-            versionObj = semver(newVersion);
-            versionObj.prerelease = [prerelease];
-            newVersion = versionObj.format();
+            version.prerelease = [prerelease];
         }
-        return {filename: filename, pkg: pkg, newVersion: newVersion};
+        return {
+            versionProvider: versionProvider,
+            newVersion: version.format(),
+            oldVersion: versionProvider.readVersion().format()
+        };
     },
     run: function(cmd, successMessage, dryRun, quiet){
         var promise = dryRun ? Q() : Q.nfcall(exec, cmd);
@@ -41,19 +62,19 @@ var steps = {
         return promise;
     },
     bump: function (config) {
-        config.pkg.version = config.newVersion;
-        var promise = config.dryRun ? Q() : Q.nfcall(fs.writeFile, config.filename, JSON.stringify(config.pkg, null, 2) + '\n');
+        var promise = config.dryRun ? Q() : Q(config.versionProvider.writeVersion(config.newVersion));
         return promise.then(function(result){
             if (!config.quiet) console.log('Version bumped to ' + config.newVersion.bold.green);
             return result;
         });
     },
     add: function (config) {
-        return steps.run('git add ' + config.filename, 'File ' + config.filename + ' added', config.dryRun, config.quiet);
+        return steps.run('git add ' + config.versionProvider.filePath,
+            'File ' + config.versionProvider.filePath + ' added', config.dryRun, config.quiet);
     },
     commit: function (config) {
-        return steps.run('git commit ' + config.filename + ' -m "' + config.commitMessage + '"',
-            'File ' + config.filename + ' committed', config.dryRun, config.quiet);
+        return steps.run('git commit ' + config.versionProvider.filePath + ' -m "' + config.commitMessage + '"',
+            'File ' + config.versionProvider.filePath + ' committed', config.dryRun, config.quiet);
     },
     tag: function (config) {
         return steps.run('git tag ' + config.tagName + ' -m "' + config.tagMessage + '"',
