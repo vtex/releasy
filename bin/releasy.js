@@ -5,14 +5,16 @@ var program = require('commander'),
 
 var type = 'patch';
 var arguments = process.argv;
-if (['major', 'minor', 'patch', 'promote'].indexOf(arguments[2]) != -1) {
+if (['major', 'minor', 'patch', 'promote', 'prerelease', 'pre'].indexOf(arguments[2]) != -1) {
   type = arguments[2];
+  if (type === 'pre') type = 'prerelease';
   console.log("Release:", type);
+  
   arguments = arguments.slice(0, 2).concat(arguments.slice(3));
 }
 
 program.version(pkg.version)
-  .usage('(major|minor|*patch*) [options]')
+  .usage('(major|minor|*patch*|prerelease) [options]')
   .option('-f, --filename [path]', 'Your package manifest file [package.json]', 'package.json')
   .option('-t, --tag-name [tag]', 'The prerelease tag in your version [beta]', 'beta')
   .option('--npm-tag [tag]', 'Tag option for npm publish', '')

@@ -44,7 +44,7 @@ var steps = {
         else {
             version = version.inc(type || 'patch');
         }
-        if (prerelease && prerelease !== 'stable') {
+        if (prerelease && prerelease !== 'stable' && type != 'prerelease') {
             version.prerelease = [prerelease];
         }
         return {
