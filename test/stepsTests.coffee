@@ -130,6 +130,17 @@ describe 'Steps', ->
       config.newVersion.should.equal '2.0.0'
       done()
 
+    it 'should bump prerelease', (done) ->
+      # arrange
+      provider = readVersion: -> semver '1.2.3-beta.4'
+
+      # act
+      config = steps.setup provider, 'prerelease', ''
+
+      # assert
+      config.newVersion.should.equal '1.2.3-beta.5'
+      done()
+
     it 'should create prerelease', (done) ->
       # arrange
       provider = readVersion: -> semver '1.2.3'
