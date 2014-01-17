@@ -4,23 +4,45 @@ var semver = require('semver');
 module.exports = function(filePath) {
   this.filePath = filePath;
 
-  var versionRegex = /^\s*\[assembly:\s*AssemblyVersion\s*\(\s*"(.+)"\s*\)\s*\]/m
-  var fileVersionRegex = /^\s*\[assembly:\s*AssemblyFileVersion\s*\(\s*"(.+)"\s*\)\s*\]/m
-  var infoVersionRegex = /^\s*\[assembly:\s*AssemblyInformationalVersion\s*\(\s*"(.+)"\s*\)\s*\]/m
+  function getRegexFor(attributeName) {
+    return new RegExp('\\[assembly:\\s*' + attributeName + '\\s*\\(\\s*"(.+)"\\s*\\)\\s*\\]', 'g');
+  }
 
-  function replaceOrAppend(text, pattern, replacement) {
+  function getPredominantLineEnding(text) {
+    var crlfs = text.match(/\r\n/g);
+    crlfs = crlfs ? crlfs.length : 0;
+
+    var lfs = text.match(/n/g);
+    var lfs = lfs ? lfs.length : 0;
+    lfs = lfs - crlfs;
+
+    if (crlfs == lfs) return require('os').EOL;
+    if (lfs > crlfs) return '\n';
+    else return '\r\n';
+  }
+
+  function replaceOrAppend(text, attributeName, replacement) {
+    var pattern = getRegexFor(attributeName);
     return pattern.test(text)
       ? text.replace(pattern, replacement)
-      : text + '\n' + replacement
+      : appendAttribute(text, replacement);
+  }
+
+  function appendAttribute(text, attribute) {
+    var lineEnding = getPredominantLineEnding(text);
+    if(text[text.length-1] == '\n')
+      return text + attribute + lineEnding;
+    else
+      return text + lineEnding + attribute + lineEnding;
   }
 
   this.readVersion = function() {
     var assemblyInfo = cat(this.filePath);
-    var versionMatch = infoVersionRegex.exec(assemblyInfo);
+    var versionMatch = getRegexFor('AssemblyInformationalVersion').exec(assemblyInfo);
     if (versionMatch === null)
-      versionMatch = fileVersionRegex.exec(assemblyInfo);
+      versionMatch = getRegexFor('AssemblyFileVersion').exec(assemblyInfo);
     if (versionMatch === null)
-      versionMatch = versionRegex.exec(assemblyInfo);
+      versionMatch = getRegexFor('AssemblyVersion').exec(assemblyInfo);
     if (versionMatch === null)
       throw new Error("Could not find version information in file " + this.filePath);
 
@@ -35,13 +57,13 @@ module.exports = function(filePath) {
       : newVersion;
     var assemblyInfo = cat(this.filePath);
 
-    assemblyInfo = replaceOrAppend(assemblyInfo, versionRegex,
+    assemblyInfo = replaceOrAppend(assemblyInfo, 'AssemblyVersion',
       '[assembly: AssemblyVersion("' + versionWithoutPrerelease + '")]');
 
-    assemblyInfo = replaceOrAppend(assemblyInfo, fileVersionRegex,
+    assemblyInfo = replaceOrAppend(assemblyInfo, 'AssemblyFileVersion',
       '[assembly: AssemblyFileVersion("' + versionWithoutPrerelease + '")]');
 
-    assemblyInfo = replaceOrAppend(assemblyInfo, infoVersionRegex,
+    assemblyInfo = replaceOrAppend(assemblyInfo, 'AssemblyInformationalVersion',
       '[assembly: AssemblyInformationalVersion("' + newVersion + '")]');
 
     assemblyInfo.to(this.filePath);

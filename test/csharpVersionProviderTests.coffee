@@ -138,5 +138,45 @@ describe 'CsharpVersionProvider', ->
         // nothing else
         [assembly: AssemblyFileVersion("2.3.4")]
         [assembly: AssemblyInformationalVersion("2.3.4-alpha.5")]
+        
+        """)
+      done()
+
+    it 'should not mess line endings', (done) ->
+      createFile('test/AssemblyInfo.cs',
+        '// [assembly: AssemblyVersion("x.x.x")]\r\n[assembly: AssemblyVersion("2.3.5")]\r\n[assembly: AssemblyFileVersion("2.3.5")]\r\n[assembly: AssemblyInformationalVersion("2.3.5-beta.3")]\r\n')
+
+      provider = new CsharpVersionProvider 'test/AssemblyInfo.cs'
+
+      # act
+      provider.writeVersion '2.3.4-alpha.5'
+
+      # assert
+      cat('test/AssemblyInfo.cs').should.equal(
+        '// [assembly: AssemblyVersion("2.3.4")]\r\n[assembly: AssemblyVersion("2.3.4")]\r\n[assembly: AssemblyFileVersion("2.3.4")]\r\n[assembly: AssemblyInformationalVersion("2.3.4-alpha.5")]\r\n')
+      done()
+
+    it 'should append missing attributes without breaking extra line', (done) ->
+      # arrange
+      createFile 'test/AssemblyInfo.cs',
+        """
+        // [assembly: AssemblyVersion("2.3.5")]
+        [assembly: AssemblyVersion("2.3.5")]
+        [assembly: AssemblyInformationalVersion("2.3.5-beta.3")]
+
+        """
+      provider = new CsharpVersionProvider 'test/AssemblyInfo.cs'
+
+      # act
+      provider.writeVersion '2.3.4-alpha.5'
+
+      # assert
+      cat('test/AssemblyInfo.cs').should.equal(
+        """
+        // [assembly: AssemblyVersion("2.3.4")]
+        [assembly: AssemblyVersion("2.3.4")]
+        [assembly: AssemblyInformationalVersion("2.3.4-alpha.5")]
+        [assembly: AssemblyFileVersion("2.3.4")]
+
         """)
       done()
