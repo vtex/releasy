@@ -5,9 +5,11 @@ var program = require('commander'),
 
 var type = 'patch';
 var arguments = process.argv;
-if (['major', 'minor', 'patch', 'promote', 'prerelease'].indexOf(arguments[2]) != -1) {
+if (['major', 'minor', 'patch', 'promote', 'prerelease', 'pre'].indexOf(arguments[2]) != -1) {
   type = arguments[2];
+  if (type === 'pre') type = 'prerelease';
   console.log("Release:", type);
+  
   arguments = arguments.slice(0, 2).concat(arguments.slice(3));
 }
 
