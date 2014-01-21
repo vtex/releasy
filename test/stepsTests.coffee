@@ -162,3 +162,59 @@ describe 'Steps', ->
       # assert
       config.newVersion.should.equal '1.2.3'
       done()
+
+  describe 'get options file', ->
+    it 'should use _releasy.yaml file', (done) ->
+      # arrange
+      createFile '_releasy.yaml',
+        """
+        default: major
+        """
+
+      # act
+      options = steps.getOptionsFile()
+
+      # assert
+      rm '_releasy.yaml'
+      options.default.should.equal 'major'
+      done()
+
+    it 'should use _releasy.yml file', (done) ->
+      # arrange
+      createFile '_releasy.yml',
+        """
+        default: major
+        """
+
+      # act
+      options = steps.getOptionsFile()
+
+      # assert
+      rm '_releasy.yml'
+      options.default.should.equal 'major'
+      done()
+
+    it 'should use _releasy.json file', (done) ->
+      # arrange
+      createFile '_releasy.json',
+        """
+        {
+          "default": "major"
+        }
+        """
+
+      # act
+      options = steps.getOptionsFile()
+
+      # assert
+      rm '_releasy.json'
+      options.default.should.equal 'major'
+      done()
+
+    it 'should return empty object if no file is found', (done) ->
+      # act
+      options = steps.getOptionsFile()
+
+      # assert
+      options.should.be.empty
+      done()

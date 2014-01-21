@@ -1,12 +1,23 @@
+require('shelljs/global')
 var Q = require('q');
 var exec = require('child_process').exec;
 var fs = require('fs');
 var path = require('path');
 var semver = require('semver');
+var yaml = require('js-yaml');
 var CsharpVersionProvider = require('./csharpVersionProvider.js');
 var NodeVersionProvider = require('./nodeVersionProvider.js');
 
 var steps = {
+    getOptionsFile: function() {
+        var possibleFiles = [ '_releasy.yaml', '_releasy.yml', '_releasy.json'];
+        for (var i = 0; i < possibleFiles.length; i++) {
+            var name = possibleFiles[i];
+            if (test('-e', name))
+                return yaml.safeLoad(cat(name));
+        }
+        return {};
+    },
     pickVersionProvider: function(fileName) {
         if (fileName === 'package.json' && !test('-e', fileName)) {
             fileName = 'src/ProductAssemblyInfo.cs';
