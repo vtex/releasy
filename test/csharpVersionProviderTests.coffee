@@ -180,3 +180,18 @@ describe 'CsharpVersionProvider', ->
 
         """)
       done()
+
+  describe 'file support', ->
+    it 'should support .cs extensions', ->
+      # act
+      supports = CsharpVersionProvider.supports 'somefile.cs'
+
+      # assert
+      supports.should.be.true
+
+    it 'should not support any other extension', ->
+      # act
+      supports = CsharpVersionProvider.supports 'arbitrary.extension'
+
+      # assert
+      supports.should.be.false

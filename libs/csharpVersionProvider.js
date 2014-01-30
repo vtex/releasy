@@ -68,4 +68,8 @@ module.exports = function(filePath) {
 
     assemblyInfo.to(this.filePath);
   };
+};
+
+module.exports.supports = function(filePath) {
+  return /\.cs$/.test(filePath);
 }

@@ -18,3 +18,7 @@ module.exports = function(filePath) {
 		pkgJson.to(this.filePath);
 	};
 };
+
+module.exports.supports = function(filePath) {
+  return /\.json$/.test(filePath);
+};

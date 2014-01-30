@@ -53,4 +53,9 @@ for (var key in defaults)
 program.type = type;
 program.cli = true;
 
-return new Releasy(program);
+try {
+  return new Releasy(program);
+} catch(error) {
+  console.error(error.message.red);
+  exit(1);
+}

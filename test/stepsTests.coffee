@@ -3,8 +3,6 @@ semver = require 'semver'
 require 'shelljs/global'
 
 steps = require '../libs/steps.js'
-CsharpVersionProvider = require '../libs/csharpVersionProvider.js'
-NodeVersionProvider = require '../libs/nodeVersionProvider.js'
 
 createFile = (filePath, contents) ->
   contents.to filePath
@@ -19,58 +17,47 @@ describe 'Steps', ->
     cd '..'
 
   describe 'picking version provider', ->
-    it 'should return C# provider if file has .cs extension', ->
-      # act
-      "".to 'SomeFile.cs'
-      provider = steps.pickVersionProvider 'SomeFile.cs'
-
-      # assert
-      provider.should.be.instanceOf CsharpVersionProvider
-      provider.filePath.should.equal 'SomeFile.cs'
-      rm 'SomeFile.cs'
-
-    it 'should return NodeJS provider if file has .json extension', ->
+    it 'should pick first matching provider', ->
       # arrange
-      "{}".to 'package.json'
+      "".to 'myversion.ext'
+      p1 = () -> @name = 'p1'
+      p1.supports = (filePath) -> false
+      
+      p2 = () -> @name = 'p2'
+      p2.supports = (filePath) -> true
+
+      p3 = () -> @name = 'p3'
+      p3.supports = (filePath) -> false
+
+      providers = [ p1, p2, p3 ]
 
       # act
-      provider = steps.pickVersionProvider 'package.json'
+      provider = steps.pickVersionProvider 'myversion.ext', providers
 
       # assert
-      provider.should.be.instanceOf NodeVersionProvider
-      provider.filePath.should.equal 'package.json'
+      provider.name.should.equal 'p2'
+      rm 'myversion.ext'
 
-    it 'should return C# provider if package.json has AssemblyInfo field', ->
+    it 'should throw error if a provider cannot be found', ->
       # arrange
-      JSON.stringify(assemblyInfo: 'MyAssemblyInfo.cs').to 'package.json'
+      "".to 'myversion.bla'
+      providers = [
+        supports: () -> false
+        ,
+        supports: () -> false
+      ]
 
-      # act
-      provider = steps.pickVersionProvider 'package.json'
-
-      # assert
-      provider.should.be.instanceOf CsharpVersionProvider
-      provider.filePath.should.equal 'MyAssemblyInfo.cs'
-      rm '-f', 'MyAssemblyInfo.cs'
-
-    it 'should return C# provider if package.json does not exist', ->
-      # arrange
-      if test '-e', 'package.json' then rm '-f', 'package.json'
-      mkdir 'src'
-      "".to 'src/ProductAssemblyInfo.cs'
-
-      # act
-      provider = steps.pickVersionProvider 'package.json'
-
-      # assert
-      provider.should.be.instanceOf CsharpVersionProvider
-      provider.filePath.should.equal 'src/ProductAssemblyInfo.cs'
-      rm '-rf', 'src'
+      # act & assert
+      ( ->
+        steps.pickVersionProvider 'myversion.bla', providers
+      ).should.throw /^Unable to find a provider that supports/
+      rm 'myversion.bla'
 
     it 'should throw error if file does not exist', ->
       # act & assert
       ( ->
         steps.pickVersionProvider 'mypackage.json'
-      ).should.throw /not found$/
+      ).should.throw /^Version file not found:/
 
 
   describe 'setup', ->

@@ -1,5 +1,6 @@
 require('shelljs/global')
 var Q = require('q');
+var util = require('util');
 var exec = require('child_process').exec;
 var fs = require('fs');
 var path = require('path');
@@ -18,25 +19,20 @@ var steps = {
         }
         return {};
     },
-    pickVersionProvider: function(fileName) {
-        if (fileName === 'package.json' && !test('-e', fileName)) {
-            fileName = 'src/ProductAssemblyInfo.cs';
-        }
+    pickVersionProvider: function(fileName, providers) {
         if (!test('-e', fileName)) {
-            throw new Error('Version file "' + fileName + '" not found');
+            throw new Error(util.format("Version file not found: %s", fileName));
         }
-        if (/\.cs$/.test(fileName)) {
-            provider = CsharpVersionProvider;
-        } else {
-            var pkg = JSON.parse(cat(fileName));
-            if (pkg.assemblyInfo) {
-                fileName = pkg.assemblyInfo;
-                provider = CsharpVersionProvider;
-            } else {
-                provider = NodeVersionProvider;
+
+        providers = providers || [ NodeVersionProvider, CsharpVersionProvider ];
+        for (var i in providers) {
+            var provider = providers[i];
+            if (provider.supports(fileName)) {
+                return new provider(fileName);
             }
         }
-        return new provider(fileName);
+
+        throw new Error(util.format("Unable to find a provider that supports '%s' as a version file", fileName));
     },
     setup: function(versionProvider, type, prerelease) {
         var version = versionProvider.readVersion();
