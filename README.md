@@ -63,6 +63,23 @@ To run silently, use `-s`:
     Old version: 1.0.0
     New version: 1.0.1-beta
 
+## Options file
+
+You **may** create a file called `_releasy.yaml` so that any values set in this file will be used as default. If you prefer, `.yml` and `.json` extensions will also work. Below is a sample `_releasy.yaml` file.
+
+```yaml
+# https://github.com/vtex/releasy
+type: prerelease                # prerelease as default increment
+filename: otherpackage.json     # different version file as default
+
+# you may also use any other options available in the command line
+stable: true        # release stable version
+tag: alpha          # use alpha as prerelease name
+dry-run: true       # always use dry run mode
+# etc
+```
+
+
 ## Different version files
 
 Releasy supports both NodeJS' package.json and .NET C#'s AssemblyInfo.cs.
