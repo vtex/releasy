@@ -6,8 +6,7 @@ var fs = require('fs');
 var path = require('path');
 var semver = require('semver');
 var yaml = require('js-yaml');
-var CsharpVersionProvider = require('./csharpVersionProvider.js');
-var NodeVersionProvider = require('./nodeVersionProvider.js');
+var providers = require('./providers.js');
 
 var steps = {
     getOptionsFile: function() {
@@ -19,14 +18,14 @@ var steps = {
         }
         return {};
     },
-    pickVersionProvider: function(fileName, providers) {
+    pickVersionProvider: function(fileName, overrideProviders) {
         if (!test('-e', fileName)) {
             throw new Error(util.format("Version file not found: %s", fileName));
         }
 
-        providers = providers || [ NodeVersionProvider, CsharpVersionProvider ];
-        for (var i in providers) {
-            var provider = providers[i];
+        var currentProviders = overrideProviders || providers;
+        for (var i in currentProviders) {
+            var provider = currentProviders[i];
             if (provider.supports(fileName)) {
                 return new provider(fileName);
             }

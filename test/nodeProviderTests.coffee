@@ -3,7 +3,7 @@ should = require 'should'
 require 'shelljs/global'
 semver = require 'semver'
 
-NodeVersionProvider = require '../libs/nodeVersionProvider.js'
+NodeVersionProvider = require '../libs/providers/node.js'
 
 createPackageJson = (filePath, pkg) ->
   JSON.stringify(pkg).to(path.resolve("./#{filePath}"))
