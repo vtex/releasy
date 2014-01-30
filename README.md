@@ -82,29 +82,14 @@ dry-run: true       # always use dry run mode
 
 ## Different version files
 
-Releasy supports both NodeJS' package.json and .NET C#'s AssemblyInfo.cs.
+Releasy currently supports both NodeJS' package.json and .NET C#'s AssemblyInfo.cs. The default file used is `package.json`, but you may specify a different value though the options file or in the command line.
 
-The default behavior looks for a `package.json` file:
+### JSON files
 
-    $ releasy		# uses package.json
+If the specified file has a `.json` extension, it will be treated as Node's `package.json`. This means that the version will be read from and written to your package's `version` field.
 
-A different AssemblyInfo or package.json can be specified:
+### C# files
 
-    $ releasy --filename anotherfile.json
-		# or
-	$ releasy --filename MyAssemblyInfo.cs
+If the specified file has a `.cs` extension, it will be treated as an `AssemblyInfo.cs` file. As such, the version will be read from and written to assembly version attributes, which are: [`AssemblyVersion`](http://msdn.microsoft.com/en-us/library/system.reflection.assemblyversionattribute(v=vs.110).aspx), [`AssemblyFileVersion`](http://msdn.microsoft.com/en-us/library/system.reflection.assemblyfileversionattribute(v=vs.110).aspx) and [`AssemblyInformationalVersion`](http://msdn.microsoft.com/en-us/library/system.reflection.assemblyinformationalversionattribute(v=vs.110).aspx).
 
-If the default `package.json` file is not found, `src/ProductAssemblyInfo.cs` is used as fallback:
-
-	# granted package.json doesn't exist
-	$ releasy		# uses src/ProductAssemblyInfo.cs
-
-If your `package.json` has a field named `assemblyInfo`, it will be used to point to the AssemblyInfo file:
-
-```json
-{
-  "assemblyInfo": "OtherAssemblyInfo.cs"
-}
-```
-	# given the package.json above
-	$ releasy		# uses OterAssemblyInfo.cs
+In order to conform to the .NET Framework's specification, only the `AssemblyInformationalVersion` attribute will retain any prerelease version information, while the other two will be stripped of it, keeping only the version numbers.
