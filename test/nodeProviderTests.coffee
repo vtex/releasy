@@ -3,7 +3,7 @@ should = require 'should'
 require 'shelljs/global'
 semver = require 'semver'
 
-NodeVersionProvider = require '../libs/nodeVersionProvider.js'
+NodeVersionProvider = require '../libs/providers/node.js'
 
 createPackageJson = (filePath, pkg) ->
   JSON.stringify(pkg).to(path.resolve("./#{filePath}"))
@@ -61,3 +61,18 @@ describe 'NodeVersionProvider', ->
       # assert
       JSON.parse(cat 'test/package.json').version.should.equal '0.3.0'
       done()
+
+  describe 'file support', ->
+    it 'should support .json extensions', ->
+      # act
+      supports = NodeVersionProvider.supports 'mypackage.json'
+
+      # assert
+      supports.should.be.true
+
+    it 'should not support any other extension', ->
+      # act
+      supports = NodeVersionProvider.supports 'arbitrary.extension'
+
+      # assert
+      supports.should.be.false
