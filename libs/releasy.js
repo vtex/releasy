@@ -9,7 +9,7 @@ module.exports = function(opts) {
 
   var versionProvider = this.steps.pickVersionProvider(opts.filename);
 
-  var config = this.steps.setup(versionProvider, opts.type, opts.stable ? 'stable' : opts.tagName);
+  var config = this.steps.setup(versionProvider, opts.type, opts.stable ? 'stable' : opts['tag-name']);
   if (!opts.quiet) {
     console.log("Old version: " + config.oldVersion.bold);
     console.log("New version: " + config.newVersion.bold.yellow);
