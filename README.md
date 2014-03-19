@@ -1,67 +1,61 @@
 # Releasy
 
-Releasy helps you release versions of your projects easily!
+Releasy helps you release versions of your projects easily! It currently works with [NodeJS package.json files](#json-files) and [C# AssemblyInfo.cs files](#c-files).
 
-### Usage:
+Releasy will automatically do the following:
+ - Increment the version in the file
+ - Commit the changed version file
+ - Create a Git tag with the version
+ - Push the tag and changes to the Git remote
 
-To simply release a beta patch:
+## Usage
 
-    $ releasy
+If you want to see what happens, just grab it (`npm i -g releasy`) and run anything with the **`--dry-run`** flag. This will only show you what would happen, without actually applying any changes. At any time, calling `releasy -h` or `releasy --help` will show you the list of options available. Try it.
 
-    Old version: 1.0.0
-    New version: 1.0.1-beta
-    prompt: Are you sure?:  (yes)
-    Starting release...
-    Version bumped to 1.0.1-beta
-    package.json added
-    package.json committed
-    New git tag created: v1.0.1-beta
-    pushed commit and tags to remote
-    All steps finished successfuly.
+The **default behavior** increments the `patch` and creates a `beta` prerelease using the `package.json` file.
 
-To release a stable patch:
+```sh
+$ releasy
 
-    $ releasy --stable
+Old version: 1.0.0
+New version: 1.0.1-beta
+prompt: Are you sure?:  (yes)
+Starting release...
+Version bumped to 1.0.1-beta
+File package.json added # git add package.json
+File package.json committed # git commit package.json -m "Release v1.0.1-beta"
+Tag created: v1.0.1-beta #git tag v1.0.1-beta -m "Release v1.0.1-beta"
+Pushed commit and tags # git push && git push --tags
+All steps finished successfuly.
+```
 
-    Old version: 1.0.0
-    New version: 1.0.1
+You can **increment other parts** of the version by providing a first argument:
 
+```sh
+$ releasy patch # 1.2.3 => 1.2.4-beta
+$ releasy minor # 1.2.3 => 1.3.0-beta
+$ releasy major # 1.2.3 => 2.0.0-beta
+$ releasy prerelease # 1.2.3-beta.4 => 1.2.3-beta.5
+$ releasy pre # is an alias to 'prerelease'
+```
 
-To release major, minor or patch, you can say it in the first argument:
+When you are ready to **promote a beta version to stable**, use the `promote` argument:
 
-    $ releasy major
+```sh
+$ releasy promote # 1.2.3-beta.4 => 1.2.3
+```
 
-    Old version: 1.0.0
-    New version: 2.0.0-beta
+Or, if you want to **increment directly as stable** version, use the `--stable` flag:
 
+```sh
+$ releasy --stable # 1.2.3 => 1.2.4
+```
 
-To promote a beta to stable, say 'promote':
+To apply a **custom prerelease identifier**:
 
-    $ releasy promote
-
-    Old version: 1.0.0-beta
-    New version: 1.0.0
-
-To release a custom patch:
-
-    $ releasy --tag alpha
-
-    Old version: 1.0.0
-    New version: 1.0.1-alpha
-
-To see what would happen and not do anything (dry run) simply:
-
-    $ releasy --dry-run
-
-    Old version: 1.0.0
-    New version: 1.0.1-beta
-
-To run silently, use `-s`:
-
-    $ releasy -s
-
-    Old version: 1.0.0
-    New version: 1.0.1-beta
+```sh
+$ releasy --tag alpha # 1.2.3 => 1.2.4-alpha
+```
 
 ## Options file
 
