@@ -1,5 +1,7 @@
 # Releasy
 
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/vtex/releasy?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Releasy helps you release versions of your projects easily! It currently works with [NodeJS package.json files](#json-files) and [C# AssemblyInfo.cs files](#c-files).
 
 Releasy will automatically do the following:
