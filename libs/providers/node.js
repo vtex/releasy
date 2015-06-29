@@ -3,7 +3,19 @@ var path = require('path');
 require('shelljs/global');
 
 module.exports = function(filePath) {
-	this.filePath = filePath;
+	this.filePath;
+	var pkg = JSON.parse(cat(filePath));
+	if (pkg.version === null || pkg.private) {
+		var meta = 'meta.json';
+		if (test('-e', meta)) {
+		    console.log("Null version or private flag detected, switching to meta.json...");
+		    this.filePath = meta;
+		} else {
+		    throw new Error("Null version or private flag detected and meta.json not found");
+		}
+	} else {
+		this.filePath = filePath;
+	}
 
 	this.readVersion = function() {
 		var pkg = JSON.parse(cat(this.filePath));
