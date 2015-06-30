@@ -67,6 +67,10 @@ var steps = {
             steps.run(cmd, msg, config.dryRun, config.quiet)
             : Q();
     },
+    preReleasy: function(config) {
+        var msg = 'Pre releasy';
+        return steps.scripts(msg, config, 'prereleasy');
+    },
     run: function(cmd, successMessage, dryRun, quiet){
         var promise = dryRun ? Q() : Q.nfcall(exec, cmd);
         if (successMessage) promise.then(function(stdout) {
@@ -106,6 +110,10 @@ var steps = {
             return steps.run(gitPushCommand, 'Pushed commit and tags', config.dryRun, config.quiet)
         });
         return promise;
+    },
+    postReleasy: function(config) {
+        var msg = 'Post releasy';
+        return steps.scripts(msg, config, 'postreleasy');
     },
     publish: function (config) {
         var cmd = 'npm publish';
