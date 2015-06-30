@@ -59,21 +59,13 @@ var steps = {
             oldVersion: versionProvider.readVersion().format()
         };
     },
-    scripts: function(config, prefix) {
-        var fileName = config.versionProvider.filePath,
-            promise;
-        if (fileName === 'package.json') {
-            var prefixMsg = prefix[0].toUpperCase() + prefix.substring(1),
-                cmd = JSON.parse(cat(fileName)).scripts[prefix+'releasy'],
-                msg = prefixMsg + ' releasy';
-
-            promise = cmd ?
-                steps.run(cmd, msg, config.dryRun, config.quiet)
-                : Q();
-        } else {
-            promise = Q();
-        }
-        return promise;
+    scripts: function(msg, config, key) {
+        var fileName = config.versionProvider.filePath;
+        if (fileName !== 'package.json') return Q();
+        var cmd = JSON.parse(cat(fileName)).scripts[key];
+        return cmd ?
+            steps.run(cmd, msg, config.dryRun, config.quiet)
+            : Q();
     },
     run: function(cmd, successMessage, dryRun, quiet){
         var promise = dryRun ? Q() : Q.nfcall(exec, cmd);
