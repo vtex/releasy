@@ -129,7 +129,10 @@ var steps = {
     },
     release: function (config, options) {
       if (!config.quiet) console.log("Starting release...");
-      var promise = steps.bump(config);
+      var promise = steps.scripts(config, 'pre');
+      promise = promise.then(function() {
+          return steps.bump(config)
+      });
       if (options.commit) {
         promise = promise.then(function () {
           return steps.add(config)
@@ -153,9 +156,13 @@ var steps = {
           return steps.publish(config)
         });
       }
-      promise = promise.then(function(){
-        if (!config.quiet) console.log("All steps finished successfuly.");
-      });
+      promise = promise
+          .then(function() {
+              return steps.scripts(config, 'post')
+          })
+          .then(function() {
+              if (!config.quiet) console.log("All steps finished successfuly.");
+          });
       promise.fail(function(reason){
         if (!config.quiet) console.log("Failed to release.", reason);
       });
