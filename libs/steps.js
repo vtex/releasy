@@ -129,7 +129,7 @@ var steps = {
     },
     release: function (config, options) {
       if (!config.quiet) console.log("Starting release...");
-      var promise = steps.scripts(config, 'pre');
+      var promise = steps.preReleasy(config);
       promise = promise.then(function() {
           return steps.bump(config)
       });
@@ -158,7 +158,7 @@ var steps = {
       }
       promise = promise
           .then(function() {
-              return steps.scripts(config, 'post')
+              return steps.postReleasy(config)
           })
           .then(function() {
               if (!config.quiet) console.log("All steps finished successfuly.");
