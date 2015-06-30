@@ -59,6 +59,18 @@ var steps = {
             oldVersion: versionProvider.readVersion().format()
         };
     },
+    scripts: function(msg, config, key) {
+        var fileName = config.versionProvider.filePath;
+        if (fileName !== 'package.json') return Q();
+        var cmd = JSON.parse(cat(fileName)).scripts[key];
+        return cmd ?
+            steps.run(cmd, msg, config.dryRun, config.quiet)
+            : Q();
+    },
+    preReleasy: function(config) {
+        var msg = 'Pre releasy';
+        return steps.scripts(msg, config, 'prereleasy');
+    },
     run: function(cmd, successMessage, dryRun, quiet){
         var promise = dryRun ? Q() : Q.nfcall(exec, cmd);
         if (successMessage) promise.then(function(stdout) {
@@ -99,6 +111,10 @@ var steps = {
         });
         return promise;
     },
+    postReleasy: function(config) {
+        var msg = 'Post releasy';
+        return steps.scripts(msg, config, 'postreleasy');
+    },
     publish: function (config) {
         var cmd = 'npm publish';
         var msg = 'Published ' + config.newVersion + ' to npm';
@@ -113,7 +129,10 @@ var steps = {
     },
     release: function (config, options) {
       if (!config.quiet) console.log("Starting release...");
-      var promise = steps.bump(config);
+      var promise = steps.preReleasy(config);
+      promise = promise.then(function() {
+          return steps.bump(config)
+      });
       if (options.commit) {
         promise = promise.then(function () {
           return steps.add(config)
@@ -137,9 +156,13 @@ var steps = {
           return steps.publish(config)
         });
       }
-      promise = promise.then(function(){
-        if (!config.quiet) console.log("All steps finished successfuly.");
-      });
+      promise = promise
+          .then(function() {
+              return steps.postReleasy(config)
+          })
+          .then(function() {
+              if (!config.quiet) console.log("All steps finished successfuly.");
+          });
       promise.fail(function(reason){
         if (!config.quiet) console.log("Failed to release.", reason);
       });
