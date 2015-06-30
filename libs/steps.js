@@ -60,9 +60,12 @@ var steps = {
         };
     },
     scripts: function(msg, config, key) {
-        var fileName = config.versionProvider.filePath;
-        if (fileName !== 'package.json') return Q();
-        var cmd = JSON.parse(cat(fileName)).scripts[key];
+        var pkg = config.versionProvider.filePath === 'package.json',
+            meta = config.versionProvider.filePath === 'meta.json',
+            validFile = pkg || meta;
+
+        if (!validFile) return Q();
+        var cmd = JSON.parse(cat('package.json')).scripts[key];
         return cmd ?
             steps.run(cmd, msg, config.dryRun, config.quiet)
             : Q();
