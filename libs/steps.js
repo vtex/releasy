@@ -2,6 +2,7 @@ require('shelljs/global')
 var Q = require('q');
 var util = require('util');
 var exec = require('child_process').exec;
+var spawnSync = require('child_process').spawnSync;
 var fs = require('fs');
 var path = require('path');
 var semver = require('semver');
@@ -81,6 +82,18 @@ var steps = {
             return stdout;
         });
         return promise;
+    },
+    spawn: function(cmd, successMessage, dryRun, quiet) {
+        var args = [];
+        cmdArr = cmd.split(' ');
+        if (cmd.length > 1) args = cmdArr.splice(1, cmd.length);
+        if (dryRun) {
+            if (!quiet) console.log(successMessage + " > ".blue + cmd.blue);
+        } else {
+            var childProcess = spawnSync(cmdArr[0], args, { stdio: 'inherit' });
+            console.log(successMessage + " > ".blue + cmd.blue);
+            return childProcess;
+        }
     },
     bump: function (config) {
         var promise = config.dryRun ? Q() : Q(config.versionProvider.writeVersion(config.newVersion));
