@@ -68,7 +68,7 @@ var steps = {
         if (!validFile) return Q();
         var cmd = JSON.parse(cat('package.json')).scripts[key];
         return cmd ?
-            steps.run(cmd, msg, config.dryRun, config.quiet)
+            steps.spawn(cmd, msg, config.dryRun, config.quiet)
             : Q();
     },
     preReleasy: function(config) {
@@ -145,10 +145,11 @@ var steps = {
     },
     release: function (config, options) {
       if (!config.quiet) console.log("Starting release...");
-      var promise = steps.preReleasy(config);
-      promise = promise.then(function() {
-          return steps.bump(config)
-      });
+      var pre = steps.preReleasy(config);
+      if (pre.status != 0) {
+        if (!config.quiet) console.log("Failed to release.");
+      }
+      var promise = steps.bump(config);
       if (options.commit) {
         promise = promise.then(function () {
           return steps.add(config)
@@ -174,7 +175,11 @@ var steps = {
       }
       promise = promise
           .then(function() {
-              return steps.postReleasy(config)
+              var post = steps.postReleasy(config);
+              if (post.status !== 0) {
+                if (!config.quiet) console.log("Failed to release.");
+              }
+              return post;
           })
           .then(function() {
               if (!config.quiet) console.log("All steps finished successfuly.");
