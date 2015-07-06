@@ -84,24 +84,26 @@ var steps = {
         return promise;
     },
     spawn: function(cmd, successMessage, dryRun, quiet) {
-        var args = [];
+        var deferred = Q.defer(),
+            args = [];
+        deferred.promise.then(function() {
+            if (!quiet) console.log(successMessage + " > ".blue + cmd.blue);
+        });
         cmdArr = cmd.split(' ');
         if (cmd.length > 1) args = cmdArr.splice(1, cmd.length);
         if (dryRun) {
-            if (!quiet) console.log(successMessage + " > ".blue + cmd.blue);
-        } else {
-            var deferred = Q.defer(),
-                childProcess = spawn(cmdArr[0], args, { stdio: 'inherit' });
-            childProcess.on('close', function(code) {
-                if (code === 0) {
-                    deferred.resolve();
-                    console.log(successMessage + " > ".blue + cmd.blue);
-                } else {
-                    deferred.reject('Script was interrupted.');
-                }
-            });
+            deferred.resolve();
             return deferred.promise;
         }
+        var childProcess = spawn(cmdArr[0], args, { stdio: 'inherit' });
+        childProcess.on('close', function(code) {
+            if (code === 0) {
+                deferred.resolve();
+            } else {
+                deferred.reject('Command exited with error code: ' + code);
+            }
+        });
+        return deferred.promise;
     },
     bump: function (config) {
         var promise = config.dryRun ? Q() : Q(config.versionProvider.writeVersion(config.newVersion));
