@@ -153,11 +153,10 @@ var steps = {
     },
     release: function (config, options) {
       if (!config.quiet) console.log("Starting release...");
-      var pre = steps.preReleasy(config);
-      if (pre.status != 0) {
-        if (!config.quiet) console.log("Failed to release.");
-      }
-      var promise = steps.bump(config);
+      var promise = steps.preReleasy(config);
+      promise.then(function() {
+          return steps.bump(config)
+      });
       if (options.commit) {
         promise = promise.then(function () {
           return steps.add(config)
@@ -183,11 +182,7 @@ var steps = {
       }
       promise = promise
           .then(function() {
-              var post = steps.postReleasy(config);
-              if (post.status !== 0) {
-                if (!config.quiet) console.log("Failed to release.");
-              }
-              return post;
+              return steps.postReleasy(config)
           })
           .then(function() {
               if (!config.quiet) console.log("All steps finished successfuly.");
