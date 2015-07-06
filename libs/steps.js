@@ -100,7 +100,7 @@ var steps = {
             if (code === 0) {
                 deferred.resolve();
             } else {
-                deferred.reject('Command exited with error code: ' + code);
+                deferred.reject('\nCommand exited with error code: ' + code);
             }
         });
         return deferred.promise;
