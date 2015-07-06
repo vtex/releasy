@@ -2,7 +2,7 @@ require('shelljs/global')
 var Q = require('q');
 var util = require('util');
 var exec = require('child_process').exec;
-var spawnSync = require('child_process').spawnSync;
+var spawn = require('child_process').spawn;
 var fs = require('fs');
 var path = require('path');
 var semver = require('semver');
@@ -90,9 +90,17 @@ var steps = {
         if (dryRun) {
             if (!quiet) console.log(successMessage + " > ".blue + cmd.blue);
         } else {
-            var childProcess = spawnSync(cmdArr[0], args, { stdio: 'inherit' });
-            console.log(successMessage + " > ".blue + cmd.blue);
-            return childProcess;
+            var deferred = Q.defer(),
+                childProcess = spawn(cmdArr[0], args, { stdio: 'inherit' });
+            childProcess.on('close', function(code) {
+                if (code === 0) {
+                    deferred.resolve();
+                    console.log(successMessage + " > ".blue + cmd.blue);
+                } else {
+                    deferred.reject('Script was interrupted.');
+                }
+            });
+            return deferred.promise;
         }
     },
     bump: function (config) {
