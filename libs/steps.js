@@ -128,7 +128,7 @@ var steps = {
         return deferred.promise;
     },
     status: function(config) {
-        return steps.run('git status', config.dryRun, config.quiet).then(function(stdout) {
+        return steps.run('git status', '', false, config.quiet).then(function(stdout) {
             return stdout;
         });
     },
