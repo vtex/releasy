@@ -75,16 +75,26 @@ var steps = {
         var msg = 'Pre releasy';
         return steps.status(config)
             .then(function(stdout) {
-                if (stdout[0].indexOf('nothing to commit') > -1) return Q();
-                // Clone object
-                var preCfg = JSON.parse(JSON.stringify(config));
-                preCfg.versionProvider.filePath = '.';
-                config.commitMessage = 'Pre releasy commit'
-                preCfg.quiet = true;
-                return steps.commit(preCfg);
+                if (stdout[0].indexOf('nothing to commit') === -1) {
+                    throw '\nPlease commit your changes before proceeding.';
+                } else {
+                    return Q();
+                }
             })
-            .then(function() {
-                return steps.scripts(msg, config, 'prereleasy');
+            .then(function() { return steps.scripts(msg, config, 'prereleasy'); })
+            .then(function() { return steps.status(config); })
+            .then(function(stdout) {
+                if (stdout[0].indexOf('nothing to commit') > -1) return Q();
+                var cmd = JSON.parse(cat('package.json')).scripts.prereleasy,
+                    preCfg = {
+                        commitMessage: 'Pre releasy commit\n\n' + cmd,
+                        dryRun: config.dryRun,
+                        versionProvider: {
+                            filePath: '.'
+                        },
+                        quiet: true
+                    };
+                return steps.commit(preCfg);
             });
     },
     run: function(cmd, successMessage, dryRun, quiet){
