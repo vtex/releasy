@@ -1,4 +1,4 @@
-require('shelljs/global')
+require('shelljs/global');
 var Q = require('q');
 var util = require('util');
 var exec = require('child_process').exec;
@@ -104,6 +104,11 @@ var steps = {
             }
         });
         return deferred.promise;
+    },
+    status: function(config) {
+        return steps.run('git status', config.dryRun, config.quiet).then(function(stdout) {
+            return stdout;
+        });
     },
     bump: function (config) {
         var promise = config.dryRun ? Q() : Q(config.versionProvider.writeVersion(config.newVersion));
