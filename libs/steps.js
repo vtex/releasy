@@ -1,7 +1,8 @@
-require('shelljs/global')
+require('shelljs/global');
 var Q = require('q');
 var util = require('util');
 var exec = require('child_process').exec;
+var spawn = require('child_process').spawn;
 var fs = require('fs');
 var path = require('path');
 var semver = require('semver');
@@ -67,12 +68,34 @@ var steps = {
         if (!validFile) return Q();
         var cmd = JSON.parse(cat('package.json')).scripts[key];
         return cmd ?
-            steps.run(cmd, msg, config.dryRun, config.quiet)
+            steps.spawn(cmd, msg, config.dryRun, config.quiet)
             : Q();
     },
     preReleasy: function(config) {
         var msg = 'Pre releasy';
-        return steps.scripts(msg, config, 'prereleasy');
+        return steps.status(config)
+            .then(function(stdout) {
+                if (stdout[0].indexOf('nothing to commit') === -1) {
+                    throw '\nPlease commit your changes before proceeding.';
+                } else {
+                    return Q();
+                }
+            })
+            .then(function() { return steps.scripts(msg, config, 'prereleasy'); })
+            .then(function() { return steps.status(config); })
+            .then(function(stdout) {
+                if (stdout[0].indexOf('nothing to commit') > -1) return Q();
+                var cmd = JSON.parse(cat('package.json')).scripts.prereleasy,
+                    preCfg = {
+                        commitMessage: 'Pre releasy commit\n\n' + cmd,
+                        dryRun: config.dryRun,
+                        versionProvider: {
+                            filePath: '.'
+                        },
+                        quiet: true
+                    };
+                return steps.commit(preCfg);
+            });
     },
     run: function(cmd, successMessage, dryRun, quiet){
         var promise = dryRun ? Q() : Q.nfcall(exec, cmd);
@@ -81,6 +104,33 @@ var steps = {
             return stdout;
         });
         return promise;
+    },
+    spawn: function(cmd, successMessage, dryRun, quiet) {
+        var deferred = Q.defer(),
+            args = [];
+        deferred.promise.then(function() {
+            if (!quiet) console.log(successMessage + " > ".blue + cmd.blue);
+        });
+        cmdArr = cmd.split(' ');
+        if (cmd.length > 1) args = cmdArr.splice(1, cmd.length);
+        if (dryRun) {
+            deferred.resolve();
+            return deferred.promise;
+        }
+        var childProcess = spawn(cmdArr[0], args, { stdio: 'inherit' });
+        childProcess.on('close', function(code) {
+            if (code === 0) {
+                deferred.resolve();
+            } else {
+                deferred.reject('\nCommand exited with error code: ' + code);
+            }
+        });
+        return deferred.promise;
+    },
+    status: function(config) {
+        return steps.run('git status', '', false, config.quiet).then(function(stdout) {
+            return stdout;
+        });
     },
     bump: function (config) {
         var promise = config.dryRun ? Q() : Q(config.versionProvider.writeVersion(config.newVersion));
@@ -133,7 +183,7 @@ var steps = {
     release: function (config, options) {
       if (!config.quiet) console.log("Starting release...");
       var promise = steps.preReleasy(config);
-      promise = promise.then(function() {
+      promise.then(function() {
           return steps.bump(config)
       });
       if (options.commit) {
