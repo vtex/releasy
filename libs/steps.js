@@ -73,7 +73,19 @@ var steps = {
     },
     preReleasy: function(config) {
         var msg = 'Pre releasy';
-        return steps.scripts(msg, config, 'prereleasy');
+        return steps.status(config)
+            .then(function(stdout) {
+                if (stdout[0].indexOf('nothing to commit') > -1) return Q();
+                // Clone object
+                var preCfg = JSON.parse(JSON.stringify(config));
+                preCfg.versionProvider.filePath = '.';
+                config.commitMessage = 'Pre releasy commit'
+                preCfg.quiet = true;
+                return steps.commit(preCfg);
+            })
+            .then(function() {
+                return steps.scripts(msg, config, 'prereleasy');
+            });
     },
     run: function(cmd, successMessage, dryRun, quiet){
         var promise = dryRun ? Q() : Q.nfcall(exec, cmd);
