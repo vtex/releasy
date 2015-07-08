@@ -117,13 +117,18 @@ var steps = {
         deferred.promise.then(function() {
             if (!quiet) console.log(successMessage + " > ".blue + cmd.blue);
         });
-        var cmdArr = cmd.split(' ');
-        if (cmd.length > 1) args = cmdArr.splice(1, cmd.length);
-        if (dryRun) {
+        if (cmd.match(/^[A-Z]*_*[A-Z]*=/)) {
+            var env = cmd.split('=');
+            process.env[env[0]] = env[1];
+        } else {
+            args = cmd.split(' ');
+            var command = args.shift();
+        }
+        if (dryRun || !command) {
             deferred.resolve();
             return deferred.promise;
         }
-        var childProcess = spawn(cmdArr[0], args, { stdio: childIO });
+        var childProcess = spawn(command, args, { stdio: childIO });
         childProcess.on('close', function(code) {
             if (code === 0) {
                 deferred.resolve();
