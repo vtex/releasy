@@ -66,7 +66,12 @@ var steps = {
         var validFile = pkg || meta;
 
         if (!validFile) return Q();
-        var cmd = JSON.parse(cat('package.json')).scripts[key];
+        try {
+            var cmd = JSON.parse(cat('package.json')).scripts[key];
+        }
+        catch(err) {
+            return Q();
+        }
         return cmd ?
             steps.spawn(cmd, msg, config.dryRun, config.quiet)
             : Q();
