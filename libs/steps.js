@@ -61,9 +61,9 @@ var steps = {
         };
     },
     scripts: function(msg, config, key) {
-        var pkg = config.versionProvider.filePath === 'package.json',
-            meta = config.versionProvider.filePath === 'meta.json',
-            validFile = pkg || meta;
+        var pkg = config.versionProvider.filePath === 'package.json';
+        var meta = config.versionProvider.filePath === 'meta.json';
+        var validFile = pkg || meta;
 
         if (!validFile) return Q();
         var cmd = JSON.parse(cat('package.json')).scripts[key];
@@ -85,15 +85,15 @@ var steps = {
             .then(function() { return steps.status(config); })
             .then(function(stdout) {
                 if (stdout[0].indexOf('nothing to commit') > -1) return Q();
-                var cmd = JSON.parse(cat('package.json')).scripts.prereleasy,
-                    preCfg = {
-                        commitMessage: 'Pre releasy commit\n\n' + cmd,
-                        dryRun: config.dryRun,
-                        versionProvider: {
-                            filePath: '.'
-                        },
-                        quiet: true
-                    };
+                var cmd = JSON.parse(cat('package.json')).scripts.prereleasy;
+                var preCfg = {
+                    commitMessage: 'Pre releasy commit\n\n' + cmd,
+                    dryRun: config.dryRun,
+                    versionProvider: {
+                        filePath: '.'
+                    },
+                    quiet: true
+                };
                 return steps.commit(preCfg);
             });
     },
@@ -106,18 +106,19 @@ var steps = {
         return promise;
     },
     spawn: function(cmd, successMessage, dryRun, quiet) {
-        var deferred = Q.defer(),
-            args = [];
+        var childIO = quiet ? null : 'inherit';
+        var deferred = Q.defer();
+        var args = [];
         deferred.promise.then(function() {
             if (!quiet) console.log(successMessage + " > ".blue + cmd.blue);
         });
-        cmdArr = cmd.split(' ');
+        var cmdArr = cmd.split(' ');
         if (cmd.length > 1) args = cmdArr.splice(1, cmd.length);
         if (dryRun) {
             deferred.resolve();
             return deferred.promise;
         }
-        var childProcess = spawn(cmdArr[0], args, { stdio: 'inherit' });
+        var childProcess = spawn(cmdArr[0], args, { stdio: childIO });
         childProcess.on('close', function(code) {
             if (code === 0) {
                 deferred.resolve();
