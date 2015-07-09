@@ -117,7 +117,7 @@ var steps = {
         deferred.promise.then(function() {
             if (!quiet) console.log(successMessage + " > ".blue + cmd.blue);
         });
-        if (cmd.match(/^[A-Z]*_*[A-Z]*=/)) {
+        if (cmd.match(/^(?:[A-Z]*_*)*[A-Z]*=/) && !dryRun) {
             var env = cmd.split('=');
             process.env[env[0]] = env[1];
         } else {
