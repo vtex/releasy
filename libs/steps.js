@@ -120,10 +120,9 @@ var steps = {
             return deferred.promise;
         }
         var childEnv = Object.create(process.env);
-        console.log(childEnv);
         var childIO = quiet ? null : 'inherit';
         var args = [];
-        if (cmd.match(/^(?:[A-Z]*_*)*[A-Z]*=/) && !dryRun) {
+        if (/^(?:[A-Z]*_*)*[A-Z]*=/.test(cmd) && !dryRun) {
             var env = cmd.split('=');
             childEnv[env[0]] = env[1].split(' ')[0];
         }
