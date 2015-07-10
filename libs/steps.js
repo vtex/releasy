@@ -111,30 +111,27 @@ var steps = {
         return promise;
     },
     spawn: function(cmd, successMessage, dryRun, quiet) {
-        var childIO = quiet ? null : 'inherit';
         var deferred = Q.defer();
-        var args = [];
         deferred.promise.then(function() {
             if (!quiet) console.log(successMessage + " > ".blue + cmd.blue);
         });
-        if (cmd.match(/^(?:[A-Z]*_*)*[A-Z]*=/) && !dryRun) {
-            var env = cmd.split('=');
-            process.env[env[0]] = env[1];
-        } else {
-            args = cmd.split(' ');
-            var command = args.shift();
-        }
-        if (dryRun || !command) {
+        if (dryRun) {
             deferred.resolve();
             return deferred.promise;
         }
-        var childProcess = spawn(command, args, { stdio: childIO });
+        var childEnv = Object.create(process.env);
+        var childIO = quiet ? null : 'inherit';
+        var args = [];
+        if (/^(?:[A-Z]*_*)*[A-Z]*=/.test(cmd) && !dryRun) {
+            var env = cmd.split('=');
+            childEnv[env[0]] = env[1].split(' ')[0];
+        }
+        args = env ? env[1].split(' ').slice(1) : cmd.split(' ');
+        var command = args.shift();
+        var childProcess = spawn(command, args, { env: childEnv, stdio: childIO });
         childProcess.on('close', function(code) {
-            if (code === 0) {
-                deferred.resolve();
-            } else {
-                deferred.reject('\nCommand exited with error code: ' + code);
-            }
+            if (code === 0) deferred.resolve();
+            else deferred.reject('\nCommand exited with error code: ' + code);
         });
         return deferred.promise;
     },
