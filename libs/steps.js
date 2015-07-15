@@ -121,14 +121,21 @@ var steps = {
         }
         var childEnv = Object.create(process.env);
         var childIO = quiet ? null : 'inherit';
-        var args = [];
+        var argsW32 = false;
         if (/^(?:[A-Z]*_*)*[A-Z]*=/.test(cmd) && !dryRun) {
             var env = cmd.split('=');
             childEnv[env[0]] = env[1].split(' ')[0];
         }
-        args = env ? env[1].split(' ').slice(1) : cmd.split(' ');
-        var command = args.shift();
-        var childProcess = spawn(command, args, { env: childEnv, stdio: childIO });
+        if (process.platform === 'win32') {
+            var argsCmd = env ? env[1].substr(env[1].indexOf(' ') + 1) : cmd;
+            var args = ['/s', '/c', argsCmd]
+            var command = 'cmd.exe';
+            argsW32 = true;
+        } else {
+            var args = env ? env[1].split(' ').slice(1) : cmd.split(' ');
+            var command = args.shift();
+        }
+        var childProcess = spawn(command, args, { env: childEnv, stdio: childIO, windowsVerbatimArguments: argsW32 });
         childProcess.on('close', function(code) {
             if (code === 0) deferred.resolve();
             else deferred.reject('\nCommand exited with error code: ' + code);
