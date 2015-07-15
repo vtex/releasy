@@ -127,7 +127,7 @@ var steps = {
             childEnv[env[0]] = env[1].split(' ')[0];
         }
         if (process.platform === 'win32') {
-            var argsCmd = env ? env[1].substr(env.indexOf(' ') + 1) : cmd;
+            var argsCmd = env ? env[1].substr(env[1].indexOf(' ') + 1) : cmd;
             var args = ['/s', '/c', argsCmd]
             var command = 'cmd.exe';
             argsW32 = true;
