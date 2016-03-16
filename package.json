@@ -24,16 +24,16 @@
   },
   "homepage": "https://github.com/vtex/releasy",
   "dependencies": {
-    "commander": "~2.1.0",
-    "q": "~0.9.7",
-    "prompt": "~0.2.12",
-    "semver": "~2.2.1",
-    "shelljs": "~0.2.6",
-    "js-yaml": "~3.0.1"
+    "commander": "~2.9.0",
+    "q": "~1.4.1",
+    "prompt": "~0.3.0",
+    "semver": "~5.1.0",
+    "shelljs": "~0.6.0",
+    "js-yaml": "~3.5.4"
   },
   "preferGlobal": true,
   "devDependencies": {
-    "should": "~2.1.1",
-    "sinon": "~1.7.3"
+    "should": "~3.3.1",
+    "sinon": "~1.17.3"
   }
 }
