@@ -6,12 +6,12 @@ module.exports = function(filePath) {
 	this.filePath = filePath;
 	var pkg = JSON.parse(cat(filePath));
 	if (pkg.version === null || pkg.private) {
-		var meta = 'meta.json';
-		if (!test('-e', meta)) {
-		      throw new Error("Null version or private flag detected and meta.json not found");
+		var manifest = 'manifest.json';
+		if (!test('-e', manifest)) {
+		      throw new Error("Null version or private flag detected and manifest.json not found");
 		}
-		console.log("Null version or private flag detected, switching to meta.json");
-		this.filePath = meta;
+		console.log("Null version or private flag detected, switching to manifest.json");
+		this.filePath = manifest;
 	}
 
 	this.readVersion = function() {
