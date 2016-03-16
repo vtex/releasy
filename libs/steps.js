@@ -62,8 +62,8 @@ var steps = {
     },
     scripts: function(msg, config, key) {
         var pkg = config.versionProvider.filePath === 'package.json';
-        var meta = config.versionProvider.filePath === 'meta.json';
-        var validFile = pkg || meta;
+        var manifest = config.versionProvider.filePath === 'manifest.json';
+        var validFile = pkg || manifest;
 
         if (!validFile) return Q();
         try {
