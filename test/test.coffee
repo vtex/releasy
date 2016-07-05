@@ -1,8 +1,8 @@
 should = require 'should'
 sinon = require('sinon')
 EventEmitter = require('events').EventEmitter
-Releasy = require '../libs/releasy.js'
-steps = require '../libs/steps.js'
+Releasy = require '../lib/releasy.js'
+steps = require '../lib/steps.js'
 semver = require 'semver'
 testpkg = require './testpackage.json'
 testpkgbeta = require './testpackagebeta.json'
@@ -18,7 +18,7 @@ describe 'releasy', ->
     done()
 
   it 'should call all steps in dry run', (done) ->
-    options = 
+    options =
       dryRun: true
       filename: 'test/testpackage.json'
       type: 'patch'

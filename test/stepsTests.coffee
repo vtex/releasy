@@ -2,7 +2,7 @@ should = require 'should'
 semver = require 'semver'
 require 'shelljs/global'
 
-steps = require '../libs/steps.js'
+steps = require '../lib/steps.js'
 
 createFile = (filePath, contents) ->
   contents.to filePath

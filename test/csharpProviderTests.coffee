@@ -2,7 +2,7 @@ should = require 'should'
 require 'shelljs/global'
 semver = require 'semver'
 
-CsharpVersionProvider = require '../libs/providers/csharp.js'
+CsharpVersionProvider = require '../lib/providers/csharp.js'
 
 createFile = (filePath, contents) ->
   contents.to filePath
