@@ -1,0 +1,9 @@
+{
+    "name": "releasy",
+    "version": "2.0.0",
+    "description": "CLI tool to release node applications with tag and auto semver bump",
+    "scripts": {
+      "prereleasy": "echo pre",
+      "postreleasy": "echo post"
+    }
+}

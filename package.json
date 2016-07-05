@@ -2,7 +2,7 @@
   "name": "releasy",
   "version": "1.5.6",
   "description": "CLI tool to release node applications with tag and auto semver bump",
-  "main": "libs/releasy.js",
+  "main": "lib/releasy.js",
   "bin": "bin/releasy.js",
   "scripts": {
     "test": "node_modules/.bin/mocha --compilers coffee:coffee-script/register"
@@ -25,17 +25,23 @@
   "homepage": "https://github.com/vtex/releasy",
   "dependencies": {
     "commander": "~2.9.0",
-    "q": "~1.4.1",
+    "js-yaml": "^3.6.1",
     "prompt": "~0.3.0",
-    "semver": "~5.1.0",
-    "shelljs": "~0.6.0",
-    "js-yaml": "~3.5.4"
+    "q": "~1.4.1",
+    "semver": "^5.2.0",
+    "shelljs": "~0.6.0"
   },
   "preferGlobal": true,
   "devDependencies": {
     "coffee-script": "~1.10.0",
-    "mocha": "~2.4.5",
+    "mocha": "^2.5.3",
     "should": "~3.3.1",
     "sinon": "~1.17.3"
+  },
+  "coffeelintConfig": {
+    "max_line_length": {
+      "name": "max_line_length",
+      "value": "120"
+    }
   }
 }

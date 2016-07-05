@@ -1,0 +1,5 @@
+{
+    "name": "releasy",
+    "version": null,
+    "description": "CLI tool to release node applications with tag and auto semver bump"
+}

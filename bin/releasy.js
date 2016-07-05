@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 var program = require('commander'),
-  Releasy = require('../libs/releasy'),
+  Releasy = require('../lib/releasy'),
   pkg = require('../package.json'),
-  steps = require('../libs/steps');
+  steps = require('../lib/steps');
 
 var optionsFile = steps.getOptionsFile();
 

@@ -3,7 +3,7 @@ should = require 'should'
 require 'shelljs/global'
 semver = require 'semver'
 
-NodeVersionProvider = require '../libs/providers/node.js'
+NodeVersionProvider = require '../lib/providers/node.js'
 
 createPackageJson = (filePath, pkg) ->
   JSON.stringify(pkg).to(path.resolve("./#{filePath}"))
@@ -31,7 +31,7 @@ describe 'NodeVersionProvider', ->
       provider = new NodeVersionProvider 'test/package.json'
 
       # act & assert
-      ( -> 
+      ( ->
         version = provider.readVersion()
       ).should.throw()
       done()
