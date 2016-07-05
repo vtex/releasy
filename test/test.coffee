@@ -5,6 +5,7 @@ Releasy = require '../lib/releasy.js'
 steps = require '../lib/steps.js'
 semver = require 'semver'
 testpkg = require './testpackage.json'
+sandbox = null
 
 describe 'steps', ->
   it 'should exist', (done) ->
@@ -12,6 +13,12 @@ describe 'steps', ->
     done()
 
 describe 'releasy', ->
+  beforeEach ->
+    sandbox = sinon.sandbox.create()
+
+  afterEach ->
+    sandbox.restore()
+
   it 'should exist', (done) ->
     Releasy.should.be.ok
     done()
@@ -24,12 +31,40 @@ describe 'releasy', ->
       steps: steps
       quiet: true
 
-    sinon.spy(steps, "setup")
-    sinon.spy(steps, "release")
-    sinon.spy(steps, "preReleasy")
-    sinon.spy(steps, "postReleasy")
-    sinon.spy(steps, "scripts")
-    sinon.spy(steps, "spawn")
+    sandbox.spy(steps, "setup")
+    sandbox.spy(steps, "release")
+    sandbox.spy(steps, "preReleasy")
+    sandbox.spy(steps, "postReleasy")
+    sandbox.spy(steps, "scripts")
+    sandbox.spy(steps, "spawn")
+
+    releasy = new Releasy(options)
+
+    releasy.promise.then ->
+      steps.setup.called.should.be.true
+      steps.release.called.should.be.true
+      steps.preReleasy.called.should.be.true
+      steps.postReleasy.called.should.be.true
+      steps.scripts.called.should.be.true
+      steps.spawn.args[0][0].should.equal 'echo pre'
+      steps.spawn.args[1][0].should.equal 'echo post'
+      done()
+    releasy.promise.fail done
+
+  it 'should call all steps in dry run using manifest', (done) ->
+    options =
+      dryRun: true
+      filename: 'test/testversionnull.json'
+      type: 'patch'
+      steps: steps
+      quiet: true
+
+    sandbox.spy(steps, "setup")
+    sandbox.spy(steps, "release")
+    sandbox.spy(steps, "preReleasy")
+    sandbox.spy(steps, "postReleasy")
+    sandbox.spy(steps, "scripts")
+    sandbox.spy(steps, "spawn")
 
     releasy = new Releasy(options)
 
