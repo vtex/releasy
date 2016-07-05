@@ -42,6 +42,7 @@ describe 'releasy', ->
 
     releasy.promise.then ->
       steps.setup.called.should.be.true
+      steps.setup.firstCall.returnValue.newVersion.should.equal '1.0.1'
       steps.release.called.should.be.true
       steps.preReleasy.called.should.be.true
       steps.postReleasy.called.should.be.true
@@ -70,6 +71,7 @@ describe 'releasy', ->
 
     releasy.promise.then ->
       steps.setup.called.should.be.true
+      steps.setup.firstCall.returnValue.newVersion.should.equal '2.0.1'
       steps.release.called.should.be.true
       steps.preReleasy.called.should.be.true
       steps.postReleasy.called.should.be.true
