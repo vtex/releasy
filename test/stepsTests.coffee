@@ -1,4 +1,5 @@
 should = require 'should'
+sinon = require 'sinon'
 semver = require 'semver'
 require 'shelljs/global'
 
@@ -22,7 +23,7 @@ describe 'Steps', ->
       "".to 'myversion.ext'
       p1 = () -> @name = 'p1'
       p1.supports = (filePath) -> false
-      
+
       p2 = () -> @name = 'p2'
       p2.supports = (filePath) -> true
 
@@ -43,7 +44,7 @@ describe 'Steps', ->
       "".to 'myversion.bla'
       providers = [
         supports: () -> false
-        ,
+      ,
         supports: () -> false
       ]
 
@@ -56,8 +57,11 @@ describe 'Steps', ->
     it 'should throw error if file does not exist', ->
       # act & assert
       ( ->
+        # Force `manifest.json` to not be found.
+        sinon.stub(global, 'test', -> false)
         steps.pickVersionProvider 'mypackage.json'
       ).should.throw /^Version file not found:/
+      global.test.restore()
 
 
   describe 'setup', ->

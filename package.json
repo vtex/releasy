@@ -37,5 +37,11 @@
     "mocha": "^2.5.3",
     "should": "~3.3.1",
     "sinon": "~1.17.3"
+  },
+  "coffeelintConfig": {
+    "max_line_length": {
+      "name": "max_line_length",
+      "value": "120"
+    }
   }
 }
