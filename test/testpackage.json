@@ -5,7 +5,9 @@
     "main": "releasy.js",
     "bin": "releasy.js",
     "scripts": {
-        "test": "make test"
+        "test": "make test",
+        "prereleasy": "echo pre",
+        "postreleasy": "echo post"
     },
     "repository": {
         "type": "git",

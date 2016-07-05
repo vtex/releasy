@@ -26,12 +26,20 @@ describe 'releasy', ->
 
     sinon.spy(steps, "setup")
     sinon.spy(steps, "release")
+    sinon.spy(steps, "preReleasy")
+    sinon.spy(steps, "postReleasy")
+    sinon.spy(steps, "scripts")
+    sinon.spy(steps, "spawn")
 
     releasy = new Releasy(options)
 
     releasy.promise.then ->
       steps.setup.called.should.be.true
       steps.release.called.should.be.true
+      steps.preReleasy.called.should.be.true
+      steps.postReleasy.called.should.be.true
+      steps.scripts.called.should.be.true
+      steps.spawn.args[0][0].should.equal 'echo pre'
+      steps.spawn.args[1][0].should.equal 'echo post'
       done()
-    releasy.promise.fail (reason) ->
-      done(new Error(reason))
+    releasy.promise.fail done
