@@ -1,11 +1,10 @@
 should = require 'should'
-sinon = require('sinon')
+sinon = require 'sinon'
 EventEmitter = require('events').EventEmitter
 Releasy = require '../lib/releasy.js'
 steps = require '../lib/steps.js'
 semver = require 'semver'
 testpkg = require './testpackage.json'
-testpkgbeta = require './testpackagebeta.json'
 
 describe 'steps', ->
   it 'should exist', (done) ->
