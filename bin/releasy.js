@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 var program = require('commander'),
   Releasy = require('../lib/releasy'),
+  camelCase = require('camelcase'),
   pkg = require('../package.json'),
   steps = require('../lib/steps');
 
@@ -12,7 +13,7 @@ if (['major', 'minor', 'patch', 'promote', 'prerelease', 'pre'].indexOf(argument
   type = arguments[2];
   if (type === 'pre') type = 'prerelease';
   console.log("Release:", type);
-  
+
   arguments = arguments.slice(0, 2).concat(arguments.slice(3));
 }
 
@@ -47,8 +48,10 @@ var defaults = {
   'quiet': false
 };
 
-for (var key in defaults)
-  program[key] = program[key] || optionsFile[key] || defaults[key];
+for (var key in defaults) {
+  var ccKey = camelCase(key)
+  program[ccKey] = program[ccKey] || optionsFile[key] || defaults[key];
+}
 
 program.type = type;
 program.cli = true;
