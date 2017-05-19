@@ -28,7 +28,7 @@ File package.json added # git add package.json
 File package.json committed # git commit package.json -m "Release v1.0.1-beta"
 Tag created: v1.0.1-beta #git tag v1.0.1-beta -m "Release v1.0.1-beta"
 Pushed commit and tags # git push && git push --tags
-All steps finished successfuly.
+All steps finished successfully.
 ```
 
 You can **increment other parts** of the version by providing a first argument:
