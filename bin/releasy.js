@@ -58,7 +58,7 @@ program.cli = true;
 
 try {
   return new Releasy(program);
-} catch(error) {
+} catch (error) {
   console.error(error.message.red);
   exit(1);
 }
