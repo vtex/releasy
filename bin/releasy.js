@@ -48,8 +48,8 @@ var defaults = {
   'quiet': false
 };
 
-for (var key in defaults) {
-  var ccKey = camelCase(key)
+for (let key in defaults) {
+  let ccKey = camelCase(key)
   program[ccKey] = program[ccKey] || optionsFile[key] || defaults[key];
 }
 
