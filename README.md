@@ -5,14 +5,21 @@
 Releasy helps you release versions of your projects easily! It currently works with [NodeJS package.json files](#json-files) and [C# AssemblyInfo.cs files](#c-files).
 
 Releasy will automatically do the following:
- - Increment the version in the file
- - Commit the changed version file
- - Create a Git tag with the version
- - Push the tag and changes to the Git remote
+ - Increment the version in the `manifest.json` or `package.json` file;
+ - Commit the changed version file;
+ - Create a Git tag with the version;
+ - Push the tag and changes to the Git remote;
+ - If exists, increment version and date in the `CHANGELOG.md`;
+    - For this, you need to follow the format of CHANGELOG of [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
+ - Post the release notes from CHANGELOG on GitHub release.
+
+## Settings
+
+A [GitHub Personal access token](https://help.github.com/articles/creating-an-access-token-for-command-line-use/) will be needed to create the release on GitHub. When you created, add the token to an environment variable named `GITHUB_API_TOKEN` in your `~/.bash_profile`.
 
 ## Usage
 
-If you want to see what happens, just grab it (`npm i -g releasy`) and run anything with the **`--dry-run`** flag. This will only show you what would happen, without actually applying any changes. At any time, calling `releasy -h` or `releasy --help` will show you the list of options available. Try it.
+If you want to see what happens, grab it (`npm i -g releasy`) and run anything with the **`--dry-run`** flag. This mode will only show you what would happen, without actually applying any changes. At any time, calling `releasy -h` or `releasy --help` will show you the list of options available. Try it.
 
 The **default behavior** increments the `patch` and creates a `beta` prerelease using the `package.json` file.
 
@@ -61,24 +68,23 @@ $ releasy --tag alpha # 1.2.3 => 1.2.4-alpha
 
 ## Options file
 
-You **may** create a file called `_releasy.yaml` so that any values set in this file will be used as default. If you prefer, `.yml` and `.json` extensions will also work. Below is a sample `_releasy.yaml` file.
+You **may** create a file called `_releasy.yaml` to any values set in this file will be used as default. If you prefer, `.yml` and `.json` extensions will also work. Below is a sample `_releasy.yaml` file.
 
 ```yaml
 # https://github.com/vtex/releasy
 type: prerelease                # prerelease as default increment
 filename: otherpackage.json     # different version file as default
 
-# you may also use any other options available in the command line
+# you may also use any other options available on the command line
 stable: true        # release stable version
 tag: alpha          # use alpha as prerelease name
-dry-run: true       # always use dry run mode
+dry-run: true       # always use dry-run mode
 # etc
 ```
 
-
 ## Different version files
 
-Releasy currently supports both NodeJS' package.json and .NET C#'s AssemblyInfo.cs. The default file used is `package.json`, but you may specify a different value though the options file or in the command line.
+Releasy currently supports both NodeJS' package.json and .NET C#'s AssemblyInfo.cs. The default file used is `package.json`, but you may specify a different value through the options file or in the command line.
 
 ### JSON files
 
@@ -88,8 +94,4 @@ If the specified file has a `.json` extension, it will be treated as Node's `pac
 
 If the specified file has a `.cs` extension, it will be treated as an `AssemblyInfo.cs` file. As such, the version will be read from and written to assembly version attributes, which are: [`AssemblyVersion`](http://msdn.microsoft.com/en-us/library/system.reflection.assemblyversionattribute(v=vs.110).aspx), [`AssemblyFileVersion`](http://msdn.microsoft.com/en-us/library/system.reflection.assemblyfileversionattribute(v=vs.110).aspx) and [`AssemblyInformationalVersion`](http://msdn.microsoft.com/en-us/library/system.reflection.assemblyinformationalversionattribute(v=vs.110).aspx).
 
-In order to conform to the .NET Framework's specification, only the `AssemblyInformationalVersion` attribute will retain any prerelease version information, while the other two will be stripped of it, keeping only the version numbers.
-
-## Settings
-
-A [GitHub Personal access token](https://help.github.com/articles/creating-an-access-token-for-command-line-use/) will be needed to create the release on GitHub. Whe you created, add this token to an environment variable named `GITHUB_API_TOKEN` in your `~/.bash_profile`.
+To conform to the .NET Framework's specification, only the `AssemblyInformationalVersion` attribute will retain any prerelease version information, while the other two will be stripped of it, keeping just the version numbers.
