@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.8.1] - 2018-6-4
+
 ### Fixed
 - Move `github-api` lib to dependencies instead of devDependencies. 
 
