@@ -11,11 +11,12 @@ Releasy will automatically do the following:
  - Push the tag and changes to the Git remote;
  - If exists, increment version and date in the `CHANGELOG.md`;
     - For this, you need to follow the format of CHANGELOG of [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
+    - See [CHANGELOG example area](#changelog-example)
  - Post the release notes from CHANGELOG on GitHub release.
 
 ## Settings
 
-A [GitHub Personal access token](https://help.github.com/articles/creating-an-access-token-for-command-line-use/) will be needed to create the release on GitHub. When you created, add the token to an environment variable named `GITHUB_API_TOKEN` in your `~/.bash_profile`.
+A [GitHub Personal access token](https://help.github.com/articles/creating-an-access-token-for-command-line-use/) will be needed to create the release on GitHub and with all `repo` permissions. When you created, add the token to an environment variable named `GITHUB_API_TOKEN` in your `~/.bash_profile`.
 
 ## Usage
 
@@ -95,3 +96,24 @@ If the specified file has a `.json` extension, it will be treated as Node's `pac
 If the specified file has a `.cs` extension, it will be treated as an `AssemblyInfo.cs` file. As such, the version will be read from and written to assembly version attributes, which are: [`AssemblyVersion`](http://msdn.microsoft.com/en-us/library/system.reflection.assemblyversionattribute(v=vs.110).aspx), [`AssemblyFileVersion`](http://msdn.microsoft.com/en-us/library/system.reflection.assemblyfileversionattribute(v=vs.110).aspx) and [`AssemblyInformationalVersion`](http://msdn.microsoft.com/en-us/library/system.reflection.assemblyinformationalversionattribute(v=vs.110).aspx).
 
 To conform to the .NET Framework's specification, only the `AssemblyInformationalVersion` attribute will retain any prerelease version information, while the other two will be stripped of it, keeping just the version numbers.
+
+### CHANGELOG example
+
+The format of your changelog is according to [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) that requires an `## [Unreleased]` section for the next release, and the types of changes below this section.
+
+An example of a first CHANGELOG.md to create before using a `releasy` command:
+
+```markdown
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
+and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+### Added
+- My new feature
+### Fixed
+- An bug
+```
