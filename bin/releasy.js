@@ -27,6 +27,7 @@ program.version(pkg.version)
   .option('--no-commit', 'Do not commit the version change')
   .option('--no-tag', 'Do not tag the version change')
   .option('--no-push', 'Do not push changes to remote')
+  .option('--notes', 'Publish notes to GitHub Release Notes. Personal Token is required to use this option')
   .option('-n, --npm', 'Publish to npm')
   .option('-d, --dry-run', 'Dont do anything, just show what would be done')
   .option('-s, --silent', 'Dont ask for confirmation')
@@ -42,6 +43,7 @@ var defaults = {
   'no-commit': false,
   'no-tag': false,
   'no-push': false,
+  'notes': false,
   'npm': false,
   'dry-run': false,
   'silent': false,
