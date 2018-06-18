@@ -55,7 +55,7 @@ When you are ready to **promote a beta version to stable**, use the `promote` ar
 $ releasy promote # 1.2.3-beta.4 => 1.2.3
 ```
 
-Or, if you want to **increment directly as stable** version, use the `--stable` flag:
+Or, if you want to **increment directly as stable** version, use the `--stable` option:
 
 ```sh
 $ releasy --stable # 1.2.3 => 1.2.4
@@ -66,6 +66,13 @@ To apply a **custom prerelease identifier**:
 ```sh
 $ releasy --tag alpha # 1.2.3 => 1.2.4-alpha
 ```
+
+If you want to **post the release notes on GitHub**, use the `--notes` option:
+
+```sh
+$ releasy --stable --notes # Release Notes submitted
+```
+
 
 ## Options file
 
