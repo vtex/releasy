@@ -1,20 +1,20 @@
 #!/usr/bin/env node
-var program = require('commander'),
-  Releasy = require('../lib/releasy'),
-  camelCase = require('camelcase'),
-  pkg = require('../package.json'),
-  steps = require('../lib/steps');
+var program = require('commander')
+var Releasy = require('../lib/releasy')
+var camelCase = require('camelcase')
+var pkg = require('../package.json')
+var steps = require('../lib/steps')
 
-var optionsFile = steps.getOptionsFile();
+var optionsFile = steps.getOptionsFile()
 
-var type = optionsFile.type || 'patch';
-var arguments = process.argv;
-if (['major', 'minor', 'patch', 'promote', 'prerelease', 'pre'].indexOf(arguments[2]) != -1) {
-  type = arguments[2];
-  if (type === 'pre') type = 'prerelease';
-  console.log("Release:", type);
+var type = optionsFile.type || 'patch'
+var args = process.argv
+if (['major', 'minor', 'patch', 'promote', 'prerelease', 'pre'].indexOf(args[2]) != -1) {
+  type = args[2]
+  if (type === 'pre') type = 'prerelease'
+  console.log('Release:', type)
 
-  arguments = arguments.slice(0, 2).concat(arguments.slice(3));
+  args = args.slice(0, 2).concat(args.slice(3))
 }
 
 program.version(pkg.version)
@@ -32,7 +32,7 @@ program.version(pkg.version)
   .option('-d, --dry-run', 'Dont do anything, just show what would be done')
   .option('-s, --silent', 'Dont ask for confirmation')
   .option('-q, --quiet', "Don't write messages to console")
-  .parse(arguments);
+  .parse(args)
 
 var defaults = {
   'filename': 'package.json',
@@ -47,20 +47,20 @@ var defaults = {
   'npm': false,
   'dry-run': false,
   'silent': false,
-  'quiet': false
-};
-
-for (let key in defaults) {
-  let ccKey = camelCase(key)
-  program[ccKey] = program[ccKey] || optionsFile[key] || defaults[key];
+  'quiet': false,
 }
 
-program.type = type;
-program.cli = true;
+for (const key in defaults) {
+  const ccKey = camelCase(key)
+  program[ccKey] = program[ccKey] || optionsFile[key] || defaults[key]
+}
+
+program.type = type
+program.cli = true
 
 try {
-  return new Releasy(program);
+  return new Releasy(program)
 } catch (error) {
-  console.error(error.message.red);
-  exit(1);
+  console.error(error.message.red)
+  exit(1)
 }
