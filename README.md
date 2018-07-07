@@ -16,7 +16,11 @@ Releasy will automatically do the following:
 
 ## Settings
 
-A [GitHub Personal access token](https://help.github.com/articles/creating-an-access-token-for-command-line-use/) will be needed to create the release on GitHub and with all `repo` permissions. When you created, add the token to an environment variable named `GITHUB_API_TOKEN` in your `~/.bash_profile`.
+A [GitHub Personal access token](https://help.github.com/articles/creating-an-access-token-for-command-line-use/) will be needed to create the release on GitHub and with all `repo` permissions. When you created, add the token to an environment variable named `GITHUB_API_TOKEN` in your `~/.bash_profile` (for bash users) or `~/.config/fish/config.fish` (for fish users) by adding the following line at the end of the file.
+
+```
+export GITHUB_API_TOKEN=<your_token>
+```
 
 ## Usage
 
