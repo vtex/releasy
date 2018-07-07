@@ -9,7 +9,7 @@ var optionsFile = steps.getOptionsFile()
 
 var type = optionsFile.type || 'patch'
 var args = process.argv
-if (['major', 'minor', 'patch', 'promote', 'prerelease', 'pre'].indexOf(args[2]) != -1) {
+if (['major', 'minor', 'patch', 'promote', 'prerelease', 'pre'].indexOf(args[2]) !== -1) {
   type = args[2]
   if (type === 'pre') type = 'prerelease'
   console.log('Release:', type)
