@@ -1,7 +1,7 @@
 should = require 'should'
 sinon = require 'sinon'
 semver = require 'semver'
-require 'shelljs/global'
+{ rm, cd } = require 'shelljs'
 
 steps = require '../lib/steps.js'
 
