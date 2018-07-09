@@ -23,7 +23,7 @@ describe 'releasy', ->
     Releasy.should.be.ok
     done()
 
-  it 'should call all steps in dry run', (done) ->
+  it 'should call all steps in dry run', ->
     options =
       dryRun: true
       filename: 'test/testpackage.json'
@@ -49,10 +49,9 @@ describe 'releasy', ->
       steps.scripts.called.should.be.true
       steps.spawn.args[0][0].should.equal 'echo pre'
       steps.spawn.args[1][0].should.equal 'echo post'
-      done()
-    releasy.promise.fail done
+    releasy.promise.fail 
 
-  it 'should call all steps in dry run using manifest', (done) ->
+  it 'should call all steps in dry run using manifest', ->
     options =
       dryRun: true
       filename: 'test/testversionnull.json'
@@ -78,10 +77,9 @@ describe 'releasy', ->
       steps.scripts.called.should.be.true
       steps.spawn.args[0][0].should.equal 'echo pre'
       steps.spawn.args[1][0].should.equal 'echo post'
-      done()
-    releasy.promise.fail done
+    releasy.promise.fail
 
-  it 'should default to manifest.json when file doesn\'t exist', (done) ->
+  it 'should default to manifest.json when file doesn\'t exist', ->
     options =
       dryRun: true
       filename: 'test/package.json'
@@ -108,5 +106,4 @@ describe 'releasy', ->
       steps.scripts.called.should.be.true
       steps.spawn.args[0][0].should.equal 'echo pre'
       steps.spawn.args[1][0].should.equal 'echo post'
-      done()
-    releasy.promise.fail done
+    releasy.promise.fail

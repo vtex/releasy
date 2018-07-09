@@ -1,6 +1,6 @@
 path = require 'path'
 should = require 'should'
-require 'shelljs/global'
+{ rm, cat } = require 'shelljs'
 semver = require 'semver'
 
 NodeVersionProvider = require '../lib/providers/node.js'
