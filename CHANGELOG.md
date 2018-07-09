@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 - Refact eslint issues. 
+- Make days and months always two-digit numbers.
 
 ### Fixed 
 - Only push the tag that's was created. 
