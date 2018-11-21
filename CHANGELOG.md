@@ -7,38 +7,55 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+
+- Check if there is a version on the `package.json`
+
 ## [1.10.0] - 2018-07-09
-### Added 
+
+### Added
+
 - Bump version of both version files when exists.
 
 ### Changed
-- Refact eslint issues. 
+
+- Refact eslint issues.
 - Make days and months always two-digit numbers.
 
-### Fixed 
-- Only push the tag that's was created. 
+### Fixed
+
+- Only push the tag that's was created.
 
 ## [1.9.1] - 2018-6-19
-### Changed 
-- Change `getGitHubRepo` to avoid the usage of `grep` and `cut` commands. 
+
+### Changed
+
+- Change `getGitHubRepo` to avoid the usage of `grep` and `cut` commands.
 
 ## [1.9.0] - 2018-6-18
-### Added 
+
+### Added
+
 - Add a `--notes` options to post release notes on GitHub.
 
 ## [1.8.2] - 2018-6-6
+
 ### Added
+
 - Better explanation for the `CHANGELOG` workflow
 
 ### Fixed
-- Fix parse to get repo info when clone is via SSH. 
+
+- Fix parse to get repo info when clone is via SSH.
 
 ## [1.8.1] - 2018-6-4
 
 ### Fixed
-- Move `github-api` lib to dependencies instead of devDependencies. 
+
+- Move `github-api` lib to dependencies instead of devDependencies.
 
 ## [1.8.0] - 2018-6-1
 
 ### Added
+
 - Update `CHANGELOG.md` when exists and post a Release Notes in github repository
