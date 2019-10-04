@@ -24,7 +24,7 @@ describe('releasy', function() {
   it('should call all steps in dry run', function() {
     const options = {
       dryRun: true,
-      filename: 'test/testpackage.json',
+      filename: 'test/fixtures/testpackage.json',
       type: 'patch',
       steps,
       quiet: true,
@@ -55,7 +55,7 @@ describe('releasy', function() {
   it('should call all steps in dry run using manifest', function() {
     const options = {
       dryRun: true,
-      filename: 'test/testversionnull.json',
+      filename: 'test/fixtures/testversionnull.json',
       type: 'patch',
       steps,
       quiet: true,
@@ -86,7 +86,7 @@ describe('releasy', function() {
   return it("should default to manifest.json when file doesn't exist", function() {
     const options = {
       dryRun: true,
-      filename: 'test/package.json',
+      filename: 'test/fixtures/package.json',
       type: 'patch',
       steps,
       quiet: true,
@@ -106,7 +106,7 @@ describe('releasy', function() {
       steps.setup.firstCall.returnValue.newVersion.should.equal('2.0.1')
       steps.release.called.should.be.true
       steps.release.args[0][0].versionProvider.filePath.should.equal(
-        'test/manifest.json'
+        'test/fixtures/manifest.json'
       )
       steps.preReleasy.called.should.be.true
       steps.postReleasy.called.should.be.true

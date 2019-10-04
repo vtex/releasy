@@ -50,7 +50,6 @@ describe('Steps', function() {
 
     it('should throw error if a provider cannot be found', function() {
       // arrange
-      ''.to('myversion.bla')
       const providers = [
         {
           supports() {
