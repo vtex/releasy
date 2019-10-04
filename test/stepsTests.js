@@ -1,28 +1,24 @@
-const sinon = require('sinon')
+const should = require('should')
 const semver = require('semver')
 const { rm, cd, test } = require('shelljs')
 
 const steps = require('../lib/steps.js')
-
-const createFile = (filePath, contents) => contents.to(filePath)
+const writeToFile = require('../lib/includes/writeToFile')
 
 describe('Steps', function() {
   before(() => cd('test'))
 
   after(function() {
-    if (test('-e', 'package.json')) {
-      rm('-f', 'package.json')
-    }
-    if (test('-e', 'src/ProductAssemblyInfo.json')) {
-      rm('-f', 'package.json')
-    }
-    return cd('..')
+    if (test('-e', 'package.json')) rm('-f', 'package.json')
+    if (test('-e', 'src/ProductAssemblyInfo.json')) rm('-f', 'package.json')
+    cd('..')
   })
 
   describe('picking version provider', function() {
     it('should pick first matching provider', function() {
       // arrange
-      ''.to('myversion.ext')
+
+      writeToFile('myversion.ext', '')
       const p1 = function() {
         return (this.name = 'p1')
       }
@@ -50,18 +46,8 @@ describe('Steps', function() {
 
     it('should throw error if a provider cannot be found', function() {
       // arrange
-      const providers = [
-        {
-          supports() {
-            return false
-          },
-        },
-        {
-          supports() {
-            return false
-          },
-        },
-      ]
+      writeToFile('myversion.bla', '')
+      const providers = [{ supports: () => false }, { supports: () => false }]
 
       // act & assert
       ;(() =>
@@ -90,7 +76,7 @@ describe('Steps', function() {
       }
 
       // act & assert
-      ;(() => steps.setup(provider, 'promote', '')).should.throw()
+      should(() => steps.setup(provider, 'promote', '')).throw()
       return done()
     })
 
@@ -212,7 +198,7 @@ describe('Steps', function() {
   return describe('get options file', function() {
     it('should use _releasy.yaml file', function(done) {
       // arrange
-      createFile(
+      writeToFile(
         '_releasy.yaml',
         `\
 default: major\
@@ -230,7 +216,7 @@ default: major\
 
     it('should use _releasy.yml file', function(done) {
       // arrange
-      createFile(
+      writeToFile(
         '_releasy.yml',
         `\
 default: major\
@@ -248,7 +234,7 @@ default: major\
 
     it('should use _releasy.json file', function(done) {
       // arrange
-      createFile(
+      writeToFile(
         '_releasy.json',
         `\
 {

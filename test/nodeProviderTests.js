@@ -3,9 +3,10 @@ const { rm, cat } = require('shelljs')
 const semver = require('semver')
 
 const NodeVersionProvider = require('../lib/providers/node.js')
+const writeToFile = require('../lib/includes/writeToFile.js')
 
 const createPackageJson = (filePath, pkg) =>
-  JSON.stringify(pkg).to(path.resolve(`./${filePath}`))
+  writeToFile(path.resolve(`./${filePath}`), JSON.stringify(pkg))
 
 describe('NodeVersionProvider', function() {
   after(() => rm('-rf', path.resolve('test/package.json')))

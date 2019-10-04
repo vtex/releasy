@@ -2,8 +2,7 @@ const { rm, cat } = require('shelljs')
 const semver = require('semver')
 
 const CsharpVersionProvider = require('../lib/providers/csharp.js')
-
-const createFile = (filePath, contents) => contents.to(filePath)
+const writeToFile = require('../lib/includes/writeToFile')
 
 describe('CsharpVersionProvider', function() {
   after(() => rm('-rf', 'test/AssemblyInfo.cs'))
@@ -11,7 +10,7 @@ describe('CsharpVersionProvider', function() {
   describe('reading C# version', function() {
     it('should return SemVer object from informational version', function(done) {
       // arrange
-      createFile(
+      writeToFile(
         'test/AssemblyInfo.cs',
         `\
 [assembly: AssemblyVersion("1.2.3")]
@@ -31,7 +30,7 @@ describe('CsharpVersionProvider', function() {
 
     it('should fall back to file version', function(done) {
       // arrange
-      createFile(
+      writeToFile(
         'test/AssemblyInfo.cs',
         `\
 [assembly: AssemblyVersion("1.2.3")]
@@ -50,7 +49,7 @@ describe('CsharpVersionProvider', function() {
 
     it('should fall back to assembly version', function(done) {
       // arrange
-      createFile(
+      writeToFile(
         'test/AssemblyInfo.cs',
         `\
 [assembly: AssemblyVersion("1.2.3")]\
@@ -68,7 +67,7 @@ describe('CsharpVersionProvider', function() {
 
     return it('should throw an error if a version cannot be found', function(done) {
       // arrange
-      createFile(
+      writeToFile(
         'test/AssemblyInfo.cs',
         `\
 // no version in here!\
@@ -87,7 +86,7 @@ describe('CsharpVersionProvider', function() {
   describe('writing C# version', function() {
     it('should accept SemVer object', function(done) {
       // arrange
-      createFile(
+      writeToFile(
         'test/AssemblyInfo.cs',
         `\
 [assembly: AssemblyVersion("1.2.3")]
@@ -113,7 +112,7 @@ describe('CsharpVersionProvider', function() {
 
     it('should accept string version', function(done) {
       // arrange
-      createFile(
+      writeToFile(
         'test/AssemblyInfo.cs',
         `\
 [assembly: AssemblyVersion("1.2.3")]
@@ -139,7 +138,7 @@ describe('CsharpVersionProvider', function() {
 
     it('should append missing version attributes', function(done) {
       // arrange
-      createFile(
+      writeToFile(
         'test/AssemblyInfo.cs',
         `\
 [assembly: AssemblyVersion("1.2.3")]
@@ -165,7 +164,7 @@ describe('CsharpVersionProvider', function() {
     })
 
     it('should not mess line endings', function(done) {
-      createFile(
+      writeToFile(
         'test/AssemblyInfo.cs',
         '// [assembly: AssemblyVersion("x.x.x")]\r\n[assembly: AssemblyVersion("2.3.5")]\r\n[assembly: AssemblyFileVersion("2.3.5")]\r\n[assembly: AssemblyInformationalVersion("2.3.5-beta.3")]\r\n'
       )
@@ -184,7 +183,7 @@ describe('CsharpVersionProvider', function() {
 
     return it('should append missing attributes without breaking extra line', function(done) {
       // arrange
-      createFile(
+      writeToFile(
         'test/AssemblyInfo.cs',
         `\
 // [assembly: AssemblyVersion("2.3.5")]
