@@ -5,8 +5,8 @@
   "main": "lib/releasy.js",
   "bin": "bin/releasy.js",
   "scripts": {
-    "test": "node_modules/.bin/mocha --compilers coffee:coffeescript/register",
-    "lint": "prettier --loglevel silent --write \"{lib,bin}/**/*.js\" && eslint --fix \"{lib,bin}/**/*.js\""
+    "test": "mocha",
+    "lint": "prettier --loglevel silent --write \"{lib,bin,test}/**/*.js\" && eslint --fix \"{lib,bin,test}/**/*.js\""
   },
   "repository": {
     "type": "git",
@@ -38,9 +38,10 @@
   "devDependencies": {
     "coffeescript": "^2.3.1",
     "eslint": "^6.5.1",
+    "eslint-config-prettier": "^6.3.0",
     "eslint-config-vtex": "^11.1.0",
     "mocha": "^5.2.0",
-    "should": "~3.3.1",
+    "should": "^13.2.3",
     "sinon": "~1.17.3"
   },
   "coffeelintConfig": {

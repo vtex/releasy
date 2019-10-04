@@ -1,8 +1,9 @@
 {
-  "extends": "eslint:recommended",
+  "extends": ["eslint:recommended", "prettier"],
   "env": {
     "es6": true,
     "jest": true,
-    "node": true
+    "node": true,
+    "mocha": true
   }
 }
