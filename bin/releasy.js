@@ -1,15 +1,21 @@
 #!/usr/bin/env node
-var program = require('commander')
-var Releasy = require('../lib/releasy')
-var camelCase = require('camelcase')
-var pkg = require('../package.json')
-var steps = require('../lib/steps')
+const program = require('commander')
+const camelCase = require('camelCase')
 
-var optionsFile = steps.getOptionsFile()
+const releasy = require('../lib/releasy')
+const pkg = require('../package.json')
+const steps = require('../lib/steps')
 
-var type = optionsFile.type || 'patch'
-var args = process.argv
-if (['major', 'minor', 'patch', 'promote', 'prerelease', 'pre'].indexOf(args[2]) !== -1) {
+const optionsFile = steps.getOptionsFile()
+
+let type = optionsFile.type || 'patch'
+let args = process.argv
+
+if (
+  ['major', 'minor', 'patch', 'promote', 'prerelease', 'pre'].indexOf(
+    args[2]
+  ) !== -1
+) {
   type = args[2]
   if (type === 'pre') type = 'prerelease'
   console.log('Release:', type)
@@ -17,7 +23,8 @@ if (['major', 'minor', 'patch', 'promote', 'prerelease', 'pre'].indexOf(args[2])
   args = args.slice(0, 2).concat(args.slice(3))
 }
 
-program.version(pkg.version)
+program
+  .version(pkg.version)
   .usage('(major|minor|*patch*|prerelease) [options]')
   .option('-f, --filename [path]', 'Your package manifest file', 'package.json')
   .option('-t, --tag-name [tag]', 'The prerelease tag in your version', 'beta')
@@ -45,9 +52,4 @@ for (let [key, value] of Object.entries(optionsFile)) {
 program.type = type
 program.cli = true
 
-try {
-  return new Releasy(program)
-} catch (error) {
-  console.error(error.message.red)
-  exit(1)
-}
+releasy(program)
