@@ -5,23 +5,24 @@ const steps = require('../lib/steps.js')
 
 let sandbox = null
 
-describe('steps', () =>
-  it('should exist', function(done) {
-    should(steps).be.ok
-    return done()
-  }))
+describe('steps', () => {
+  it('should exist', () => {
+    should(steps).be.ok()
+  })
+})
 
-describe('releasy', function() {
-  beforeEach(() => (sandbox = sinon.sandbox.create()))
+describe('releasy', () => {
+  beforeEach(() => (sandbox = sinon.createSandbox()))
 
-  afterEach(() => sandbox.restore())
-
-  it('should exist', function(done) {
-    Releasy.should.be.ok
-    return done()
+  afterEach(() => {
+    sandbox.restore()
   })
 
-  it('should call all steps in dry run', function() {
+  it('should exist', () => {
+    Releasy.should.be.ok()
+  })
+
+  it('should call all steps in dry run', () => {
     const options = {
       dryRun: true,
       filename: 'test/fixtures/testpackage.json',
@@ -52,7 +53,7 @@ describe('releasy', function() {
     return releasy.fail
   })
 
-  it('should call all steps in dry run using manifest', function() {
+  it('should call all steps in dry run using manifest', () => {
     const options = {
       dryRun: true,
       filename: 'test/fixtures/testversionnull.json',
@@ -83,7 +84,7 @@ describe('releasy', function() {
     return releasy.fail
   })
 
-  return it("should default to manifest.json when file doesn't exist", function() {
+  return it("should default to manifest.json when file doesn't exist", () => {
     const options = {
       dryRun: true,
       filename: 'test/fixtures/package.json',
