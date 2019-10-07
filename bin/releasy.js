@@ -34,9 +34,17 @@ program
   .option('--no-commit', 'Do not commit the version change', false)
   .option('--no-tag', 'Do not tag the version change', false)
   .option('--no-push', 'Do not push changes to remote', false)
-  .option('--notes', 'Publish notes to GitHub Release Notes. Personal Token is required to use this option', false)
+  .option(
+    '--notes',
+    'Publish notes to GitHub Release Notes. Personal Token is required to use this option',
+    false
+  )
   .option('-n, --npm', 'Publish to npm', false)
-  .option('-d, --dry-run', 'Dont do anything, just show what would be done', false)
+  .option(
+    '-d, --dry-run',
+    'Dont do anything, just show what would be done',
+    false
+  )
   .option('-s, --silent', 'Dont ask for confirmation', false)
   .option('-q, --quiet', "Don't write messages to console", false)
   .parse(args)

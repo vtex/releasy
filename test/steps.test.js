@@ -40,7 +40,7 @@ describe('Steps', function() {
       const provider = steps.pickVersionProvider('myversion.ext', providers)
 
       // assert
-      provider.name.should.equal('p2')
+      should(provider.name).equal('p2')
       return rm('myversion.ext')
     })
 
@@ -92,9 +92,9 @@ describe('Steps', function() {
       const config = steps.setup(provider, 'patch', '')
 
       // assert
-      config.newVersion.should.equal('1.2.4')
-      config.oldVersion.should.equal('1.2.3')
-      config.versionProvider.should.equal(provider)
+      should(config.newVersion).equal('1.2.4')
+      should(config.oldVersion).equal('1.2.3')
+      should(config.versionProvider).equal(provider)
       return done()
     })
 
@@ -110,7 +110,7 @@ describe('Steps', function() {
       const config = steps.setup(provider, 'patch', '')
 
       // assert
-      config.newVersion.should.equal('1.2.4')
+      should(config.newVersion).equal('1.2.4')
       return done()
     })
 
@@ -126,7 +126,7 @@ describe('Steps', function() {
       const config = steps.setup(provider, 'minor', '')
 
       // assert
-      config.newVersion.should.equal('1.3.0')
+      should(config.newVersion).equal('1.3.0')
       return done()
     })
 
@@ -142,7 +142,7 @@ describe('Steps', function() {
       const config = steps.setup(provider, 'major', '')
 
       // assert
-      config.newVersion.should.equal('2.0.0')
+      should(config.newVersion).equal('2.0.0')
       return done()
     })
 
@@ -158,7 +158,7 @@ describe('Steps', function() {
       const config = steps.setup(provider, 'prerelease', '')
 
       // assert
-      config.newVersion.should.equal('1.2.3-beta.5')
+      should(config.newVersion).equal('1.2.3-beta.5')
       return done()
     })
 
@@ -174,7 +174,7 @@ describe('Steps', function() {
       const config = steps.setup(provider, 'patch', 'beta')
 
       // assert
-      config.newVersion.should.equal('1.2.4-beta')
+      should(config.newVersion).equal('1.2.4-beta')
       return done()
     })
 
@@ -190,7 +190,7 @@ describe('Steps', function() {
       const config = steps.setup(provider, 'promote', '')
 
       // assert
-      config.newVersion.should.equal('1.2.3')
+      should(config.newVersion).equal('1.2.3')
       return done()
     })
   })
@@ -210,7 +210,7 @@ default: major\
 
       // assert
       rm('_releasy.yaml')
-      options.default.should.equal('major')
+      should(options.default).equal('major')
       return done()
     })
 
@@ -228,7 +228,7 @@ default: major\
 
       // assert
       rm('_releasy.yml')
-      options.default.should.equal('major')
+      should(options.default).equal('major')
       return done()
     })
 
@@ -248,7 +248,7 @@ default: major\
 
       // assert
       rm('_releasy.json')
-      options.default.should.equal('major')
+      should(options.default).equal('major')
       return done()
     })
 
@@ -257,7 +257,7 @@ default: major\
       const options = steps.getOptionsFile()
 
       // assert
-      options.should.be.empty
+      should(options).be.empty()
       return done()
     })
   })

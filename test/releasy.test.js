@@ -19,7 +19,7 @@ describe('releasy', () => {
   })
 
   it('should exist', () => {
-    Releasy.should.be.ok()
+    should(Releasy).be.ok()
   })
 
   it('should call all steps in dry run', () => {
@@ -41,14 +41,14 @@ describe('releasy', () => {
     const releasy = Releasy(options)
 
     releasy.then(function() {
-      steps.setup.called.should.be.true
-      steps.setup.firstCall.returnValue.newVersion.should.equal('1.0.1')
-      steps.release.called.should.be.true
-      steps.preReleasy.called.should.be.true
-      steps.postReleasy.called.should.be.true
-      steps.scripts.called.should.be.true
-      steps.spawn.args[0][0].should.equal('echo pre')
-      return steps.spawn.args[1][0].should.equal('echo post')
+      should(steps.setup.called).be.true
+      should(steps.setup.firstCall.returnValue.newVersion).equal('1.0.1')
+      should(steps.release.called).be.true
+      should(steps.preReleasy.called).be.true
+      should(steps.postReleasy.called).be.true
+      should(steps.scripts.called).be.true
+      should(steps.spawn.args[0][0]).equal('echo pre')
+      return should(steps.spawn.args[1][0]).equal('echo post')
     })
     return releasy.fail
   })
@@ -72,14 +72,14 @@ describe('releasy', () => {
     const releasy = Releasy(options)
 
     releasy.then(function() {
-      steps.setup.called.should.be.true
-      steps.setup.firstCall.returnValue.newVersion.should.equal('2.0.1')
-      steps.release.called.should.be.true
-      steps.preReleasy.called.should.be.true
-      steps.postReleasy.called.should.be.true
-      steps.scripts.called.should.be.true
-      steps.spawn.args[0][0].should.equal('echo pre')
-      return steps.spawn.args[1][0].should.equal('echo post')
+      should(steps.setup.called).be.true
+      should(steps.setup.firstCall.returnValue.newVersion).equal('2.0.1')
+      should(steps.release.called).be.true
+      should(steps.preReleasy.called).be.true
+      should(steps.postReleasy.called).be.true
+      should(steps.scripts.called).be.true
+      should(steps.spawn.args[0][0]).equal('echo pre')
+      return should(steps.spawn.args[1][0]).equal('echo post')
     })
     return releasy.fail
   })
@@ -103,17 +103,17 @@ describe('releasy', () => {
     const releasy = Releasy(options)
 
     releasy.then(function() {
-      steps.setup.called.should.be.true
-      steps.setup.firstCall.returnValue.newVersion.should.equal('2.0.1')
-      steps.release.called.should.be.true
-      steps.release.args[0][0].versionProvider.filePath.should.equal(
+      should(steps.setup.called).be.true
+      should(steps.setup.firstCall.returnValue.newVersion).equal('2.0.1')
+      should(steps.release.called).be.true
+      should(steps.release.args[0][0].versionProvider.filePath).equal(
         'test/fixtures/manifest.json'
       )
-      steps.preReleasy.called.should.be.true
-      steps.postReleasy.called.should.be.true
-      steps.scripts.called.should.be.true
-      steps.spawn.args[0][0].should.equal('echo pre')
-      return steps.spawn.args[1][0].should.equal('echo post')
+      should(steps.preReleasy.called).be.true
+      should(steps.postReleasy.called).be.true
+      should(steps.scripts.called).be.true
+      should(steps.spawn.args[0][0]).equal('echo pre')
+      return should(steps.spawn.args[1][0]).equal('echo post')
     })
     return releasy.fail
   })

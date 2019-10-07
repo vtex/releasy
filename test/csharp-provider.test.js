@@ -1,83 +1,92 @@
 const { rm, cat } = require('shelljs')
 const semver = require('semver')
+const should = require('should')
 
 const CsharpVersionProvider = require('../lib/providers/csharp.js')
 const writeToFile = require('../lib/includes/writeToFile')
 
 describe('CsharpVersionProvider', function() {
-  after(() => rm('-rf', 'test/AssemblyInfo.cs'))
+  after(() => rm('-rf', 'test/fixtures/AssemblyInfo.cs'))
 
   describe('reading C# version', function() {
     it('should return SemVer object from informational version', function(done) {
       // arrange
       writeToFile(
-        'test/AssemblyInfo.cs',
+        'test/fixtures/AssemblyInfo.cs',
         `\
 [assembly: AssemblyVersion("1.2.3")]
 [assembly: AssemblyFileVersion("1.2.3")]
 [assembly: AssemblyInformationalVersion("1.2.3-beta.4")]\
 `
       )
-      const provider = new CsharpVersionProvider('test/AssemblyInfo.cs')
+      const provider = new CsharpVersionProvider(
+        'test/fixtures/AssemblyInfo.cs'
+      )
 
       // act
       const version = provider.readVersion()
 
       // assert
-      version.format().should.equal('1.2.3-beta.4')
+      should(version.format()).equal('1.2.3-beta.4')
       return done()
     })
 
     it('should fall back to file version', function(done) {
       // arrange
       writeToFile(
-        'test/AssemblyInfo.cs',
+        'test/fixtures/AssemblyInfo.cs',
         `\
 [assembly: AssemblyVersion("1.2.3")]
 [assembly: AssemblyFileVersion("1.2.3")]\
 `
       )
-      const provider = new CsharpVersionProvider('test/AssemblyInfo.cs')
+      const provider = new CsharpVersionProvider(
+        'test/fixtures/AssemblyInfo.cs'
+      )
 
       // act
       const version = provider.readVersion()
 
       // assert
-      version.format().should.equal('1.2.3')
+      should(version.format()).equal('1.2.3')
       return done()
     })
 
     it('should fall back to assembly version', function(done) {
       // arrange
       writeToFile(
-        'test/AssemblyInfo.cs',
+        'test/fixtures/AssemblyInfo.cs',
         `\
 [assembly: AssemblyVersion("1.2.3")]\
 `
       )
-      const provider = new CsharpVersionProvider('test/AssemblyInfo.cs')
+      const provider = new CsharpVersionProvider(
+        'test/fixtures/AssemblyInfo.cs'
+      )
 
       // act
       const version = provider.readVersion()
 
       // assert
-      version.format().should.equal('1.2.3')
+      should(version.format()).equal('1.2.3')
       return done()
     })
 
     return it('should throw an error if a version cannot be found', function(done) {
       // arrange
       writeToFile(
-        'test/AssemblyInfo.cs',
+        'test/fixtures/AssemblyInfo.cs',
         `\
 // no version in here!\
 `
       )
-      const provider = new CsharpVersionProvider('test/AssemblyInfo.cs')
+      const provider = new CsharpVersionProvider(
+        'test/fixtures/AssemblyInfo.cs'
+      )
 
       // act & assert
       ;(() => provider.readVersion()).should.throw(
-        'Could not find version information in file test/AssemblyInfo.cs'
+        'Could not find version information in file test/fixtures/AssemblyInfo.cs'
       )
       return done()
     })
@@ -87,20 +96,22 @@ describe('CsharpVersionProvider', function() {
     it('should accept SemVer object', function(done) {
       // arrange
       writeToFile(
-        'test/AssemblyInfo.cs',
+        'test/fixtures/AssemblyInfo.cs',
         `\
 [assembly: AssemblyVersion("1.2.3")]
 [assembly: AssemblyFileVersion("1.2.3")]
 [assembly: AssemblyInformationalVersion("1.2.3-beta.4")]\
 `
       )
-      const provider = new CsharpVersionProvider('test/AssemblyInfo.cs')
+      const provider = new CsharpVersionProvider(
+        'test/fixtures/AssemblyInfo.cs'
+      )
 
       // act
       provider.writeVersion(semver('2.3.4-alpha.5'))
 
       // assert
-      cat('test/AssemblyInfo.cs').should.equal(
+      should(cat('test/fixtures/AssemblyInfo.cs').toString()).equal(
         `\
 [assembly: AssemblyVersion("2.3.4")]
 [assembly: AssemblyFileVersion("2.3.4")]
@@ -113,20 +124,22 @@ describe('CsharpVersionProvider', function() {
     it('should accept string version', function(done) {
       // arrange
       writeToFile(
-        'test/AssemblyInfo.cs',
+        'test/fixtures/AssemblyInfo.cs',
         `\
 [assembly: AssemblyVersion("1.2.3")]
 [assembly: AssemblyFileVersion("1.2.3")]
 [assembly: AssemblyInformationalVersion("1.2.3-beta.4")]\
 `
       )
-      const provider = new CsharpVersionProvider('test/AssemblyInfo.cs')
+      const provider = new CsharpVersionProvider(
+        'test/fixtures/AssemblyInfo.cs'
+      )
 
       // act
       provider.writeVersion('2.3.4-alpha.5')
 
       // assert
-      cat('test/AssemblyInfo.cs').should.equal(
+      should(cat('test/fixtures/AssemblyInfo.cs').toString()).equal(
         `\
 [assembly: AssemblyVersion("2.3.4")]
 [assembly: AssemblyFileVersion("2.3.4")]
@@ -139,19 +152,21 @@ describe('CsharpVersionProvider', function() {
     it('should append missing version attributes', function(done) {
       // arrange
       writeToFile(
-        'test/AssemblyInfo.cs',
+        'test/fixtures/AssemblyInfo.cs',
         `\
 [assembly: AssemblyVersion("1.2.3")]
 // nothing else\
 `
       )
-      const provider = new CsharpVersionProvider('test/AssemblyInfo.cs')
+      const provider = new CsharpVersionProvider(
+        'test/fixtures/AssemblyInfo.cs'
+      )
 
       // act
       provider.writeVersion('2.3.4-alpha.5')
 
       // assert
-      cat('test/AssemblyInfo.cs').should.equal(
+      should(cat('test/fixtures/AssemblyInfo.cs').toString()).equal(
         `\
 [assembly: AssemblyVersion("2.3.4")]
 // nothing else
@@ -165,17 +180,19 @@ describe('CsharpVersionProvider', function() {
 
     it('should not mess line endings', function(done) {
       writeToFile(
-        'test/AssemblyInfo.cs',
+        'test/fixtures/AssemblyInfo.cs',
         '// [assembly: AssemblyVersion("x.x.x")]\r\n[assembly: AssemblyVersion("2.3.5")]\r\n[assembly: AssemblyFileVersion("2.3.5")]\r\n[assembly: AssemblyInformationalVersion("2.3.5-beta.3")]\r\n'
       )
 
-      const provider = new CsharpVersionProvider('test/AssemblyInfo.cs')
+      const provider = new CsharpVersionProvider(
+        'test/fixtures/AssemblyInfo.cs'
+      )
 
       // act
       provider.writeVersion('2.3.4-alpha.5')
 
       // assert
-      cat('test/AssemblyInfo.cs').should.equal(
+      should(cat('test/fixtures/AssemblyInfo.cs').toString()).equal(
         '// [assembly: AssemblyVersion("2.3.4")]\r\n[assembly: AssemblyVersion("2.3.4")]\r\n[assembly: AssemblyFileVersion("2.3.4")]\r\n[assembly: AssemblyInformationalVersion("2.3.4-alpha.5")]\r\n'
       )
       return done()
@@ -184,7 +201,7 @@ describe('CsharpVersionProvider', function() {
     return it('should append missing attributes without breaking extra line', function(done) {
       // arrange
       writeToFile(
-        'test/AssemblyInfo.cs',
+        'test/fixtures/AssemblyInfo.cs',
         `\
 // [assembly: AssemblyVersion("2.3.5")]
 [assembly: AssemblyVersion("2.3.5")]
@@ -192,13 +209,15 @@ describe('CsharpVersionProvider', function() {
 \
 `
       )
-      const provider = new CsharpVersionProvider('test/AssemblyInfo.cs')
+      const provider = new CsharpVersionProvider(
+        'test/fixtures/AssemblyInfo.cs'
+      )
 
       // act
       provider.writeVersion('2.3.4-alpha.5')
 
       // assert
-      cat('test/AssemblyInfo.cs').should.equal(
+      should(cat('test/fixtures/AssemblyInfo.cs').toString()).equal(
         `\
 // [assembly: AssemblyVersion("2.3.4")]
 [assembly: AssemblyVersion("2.3.4")]
@@ -217,7 +236,7 @@ describe('CsharpVersionProvider', function() {
       const supports = CsharpVersionProvider.supports('somefile.cs')
 
       // assert
-      return supports.should.be.true
+      return should(supports).be.true()
     })
 
     return it('should not support any other extension', function() {
@@ -225,7 +244,7 @@ describe('CsharpVersionProvider', function() {
       const supports = CsharpVersionProvider.supports('arbitrary.extension')
 
       // assert
-      return supports.should.be.false
+      return should(supports).be.false()
     })
   })
 })
