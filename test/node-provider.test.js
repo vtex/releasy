@@ -9,13 +9,15 @@ const createPackageJson = (filePath, pkg) =>
   writeToFile(path.resolve(`./${filePath}`), JSON.stringify(pkg))
 
 describe('NodeVersionProvider', function() {
-  after(() => rm('-rf', path.resolve('test/package.json')))
+  after(() => rm('-rf', path.resolve('test/fixtures/package.json')))
 
   describe('reading node version', function() {
     it('should return SemVer object', function(done) {
       // arrange
-      createPackageJson('test/package.json', { version: '1.2.3-beta.4' })
-      const provider = new NodeVersionProvider('test/package.json')
+      createPackageJson('test/fixtures/package.json', {
+        version: '1.2.3-beta.4',
+      })
+      const provider = new NodeVersionProvider('test/fixtures/package.json')
 
       // act
       const version = provider.readVersion()
@@ -27,8 +29,8 @@ describe('NodeVersionProvider', function() {
 
     return it('should throw error for version in incorrect format', function(done) {
       // arrange
-      createPackageJson('test/package.json', { version: 'blabla' })
-      const provider = new NodeVersionProvider('test/package.json')
+      createPackageJson('test/fixtures/package.json', { version: 'blabla' })
+      const provider = new NodeVersionProvider('test/fixtures/package.json')
 
       // act & assert
       ;(function() {
@@ -41,28 +43,32 @@ describe('NodeVersionProvider', function() {
   describe('writing node version', function() {
     it('should accept SemVer object', function(done) {
       // arrange
-      createPackageJson('test/package.json', { version: '0.1.0' })
-      const provider = new NodeVersionProvider('test/package.json')
+      createPackageJson('test/fixtures/package.json', { version: '0.1.0' })
+      const provider = new NodeVersionProvider('test/fixtures/package.json')
       const newVersion = semver('0.2.0')
 
       // act
       provider.writeVersion(newVersion)
 
       // assert
-      JSON.parse(cat('test/package.json')).version.should.equal('0.2.0')
+      JSON.parse(cat('test/fixtures/package.json')).version.should.equal(
+        '0.2.0'
+      )
       return done()
     })
 
     return it('should accept string version', function(done) {
       //arrange
-      createPackageJson('test/package.json', { version: '0.1.0' })
-      const provider = new NodeVersionProvider('test/package.json')
+      createPackageJson('test/fixtures/package.json', { version: '0.1.0' })
+      const provider = new NodeVersionProvider('test/fixtures/package.json')
 
       // act
       provider.writeVersion('0.3.0')
 
       // assert
-      JSON.parse(cat('test/package.json')).version.should.equal('0.3.0')
+      JSON.parse(cat('test/fixtures/package.json')).version.should.equal(
+        '0.3.0'
+      )
       return done()
     })
   })

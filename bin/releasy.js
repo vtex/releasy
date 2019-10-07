@@ -31,9 +31,9 @@ program
   .option('--npm-tag [tag]', 'Tag option for npm publish', '')
   .option('-f, --folder [folder]', 'Folder option for npm publish', '')
   .option('--stable', 'Mark this as a relese stable (no prerelease tag)', false)
-  .option('--no-commit', 'Do not commit the version change')
-  .option('--no-tag', 'Do not tag the version change')
-  .option('--no-push', 'Do not push changes to remote')
+  .option('--no-commit', 'Do not commit the version change', false)
+  .option('--no-tag', 'Do not tag the version change', false)
+  .option('--no-push', 'Do not push changes to remote', false)
   .option(
     '--notes',
     'Publish notes to GitHub Release Notes. Personal Token is required to use this option',
