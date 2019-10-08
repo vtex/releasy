@@ -19,40 +19,27 @@ if (['major', 'minor', 'patch', 'promote', 'prerelease', 'pre'].indexOf(args[2])
 
 program.version(pkg.version)
   .usage('(major|minor|*patch*|prerelease) [options]')
-  .option('-f, --filename [path]', 'Your package manifest file [package.json]')
-  .option('-t, --tag-name [tag]', 'The prerelease tag in your version [beta]')
-  .option('--npm-tag [tag]', 'Tag option for npm publish')
-  .option('-f, --folder [folder]', 'Folder option for npm publish')
-  .option('--stable', 'Mark this as a relese stable (no prerelease tag)')
-  .option('--no-commit', 'Do not commit the version change')
-  .option('--no-tag', 'Do not tag the version change')
-  .option('--no-push', 'Do not push changes to remote')
-  .option('--notes', 'Publish notes to GitHub Release Notes. Personal Token is required to use this option')
-  .option('-n, --npm', 'Publish to npm')
-  .option('-d, --dry-run', 'Dont do anything, just show what would be done')
-  .option('-s, --silent', 'Dont ask for confirmation')
-  .option('-q, --quiet', "Don't write messages to console")
+  .option('-f, --filename [path]', 'Your package manifest file', 'package.json')
+  .option('-t, --tag-name [tag]', 'The prerelease tag in your version', 'beta')
+  .option('--npm-tag [tag]', 'Tag option for npm publish', '')
+  .option('-f, --folder [folder]', 'Folder option for npm publish', '')
+  .option('--stable', 'Mark this as a relese stable (no prerelease tag)', false)
+  .option('--no-commit', 'Do not commit the version change', false)
+  .option('--no-tag', 'Do not tag the version change', false)
+  .option('--no-push', 'Do not push changes to remote', false)
+  .option('--notes', 'Publish notes to GitHub Release Notes. Personal Token is required to use this option', false)
+  .option('-n, --npm', 'Publish to npm', false)
+  .option('-d, --dry-run', 'Dont do anything, just show what would be done', false)
+  .option('-s, --silent', 'Dont ask for confirmation', false)
+  .option('-q, --quiet', "Don't write messages to console", false)
   .parse(args)
 
-var defaults = {
-  'filename': 'package.json',
-  'tag-name': 'beta',
-  'npm-tag': '',
-  'folder': '',
-  'stable': false,
-  'no-commit': false,
-  'no-tag': false,
-  'no-push': false,
-  'notes': false,
-  'npm': false,
-  'dry-run': false,
-  'silent': false,
-  'quiet': false,
-}
-
-for (const key in defaults) {
-  const ccKey = camelCase(key)
-  program[ccKey] = program[ccKey] || optionsFile[key] || defaults[key]
+for (let [key, value] of Object.entries(optionsFile)) {
+  if (key.startsWith('no-')) {
+    key = key.slice(3, key.length)
+    value = !value
+  }
+  program[camelCase(key)] = value
 }
 
 program.type = type
