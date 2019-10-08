@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.10.2] - 2019-10-08
+
 ### Fixed
 
 - `--no-...` flags and other flag default values.
