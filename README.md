@@ -5,14 +5,15 @@
 Releasy helps you release versions of your projects easily! It currently works with [NodeJS package.json files](#json-files) and [C# AssemblyInfo.cs files](#c-files).
 
 Releasy will automatically do the following:
- - Increment the version in the `manifest.json` or `package.json` file;
- - Commit the changed version file;
- - Create a Git tag with the version;
- - Push the tag and changes to the Git remote;
- - If exists, increment version and date in the `CHANGELOG.md`;
-    - For this, you need to follow the format of CHANGELOG of [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
-    - See [CHANGELOG example area](#changelog-example)
- - Post the release notes from CHANGELOG on GitHub release.
+
+- Increment the version in the `manifest.json` or `package.json` file;
+- Commit the changed version file;
+- Create a Git tag with the version;
+- Push the tag and changes to the Git remote;
+- If exists, increment version and date in the `CHANGELOG.md`;
+  - For this, you need to follow the format of CHANGELOG of [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
+  - See [CHANGELOG example area](#changelog-example)
+- Post the release notes from CHANGELOG on GitHub release.
 
 ## Settings
 
@@ -77,6 +78,11 @@ If you want to **post the release notes on GitHub**, use the `--notes` option:
 $ releasy --stable --notes # Release Notes submitted
 ```
 
+If you want to prevent releasy from automatically **committing, tagging or pushing**, use the `--no-commit`/`--no-tag`/`--no-push` options:
+
+```sh
+$ releasy --stable --no-tag --no-push
+```
 
 ## Options file
 
@@ -84,13 +90,17 @@ You **may** create a file called `_releasy.yaml` to any values set in this file 
 
 ```yaml
 # https://github.com/vtex/releasy
-type: prerelease                # prerelease as default increment
-filename: otherpackage.json     # different version file as default
+type: prerelease # prerelease as default increment
+filename: otherpackage.json # different version file as default
 
 # you may also use any other options available on the command line
-stable: true        # release stable version
-tag: alpha          # use alpha as prerelease name
-dry-run: true       # always use dry-run mode
+stable: true # release stable version
+tag: alpha # use alpha as prerelease name
+dry-run: true # always use dry-run mode
+
+no-tag: true # don't tag the release commit
+no-push: true # don't push to the remote repository
+no-commit: true # don't create the release commit
 # etc
 ```
 
@@ -104,7 +114,7 @@ If the specified file has a `.json` extension, it will be treated as Node's `pac
 
 ### C# files
 
-If the specified file has a `.cs` extension, it will be treated as an `AssemblyInfo.cs` file. As such, the version will be read from and written to assembly version attributes, which are: [`AssemblyVersion`](http://msdn.microsoft.com/en-us/library/system.reflection.assemblyversionattribute(v=vs.110).aspx), [`AssemblyFileVersion`](http://msdn.microsoft.com/en-us/library/system.reflection.assemblyfileversionattribute(v=vs.110).aspx) and [`AssemblyInformationalVersion`](http://msdn.microsoft.com/en-us/library/system.reflection.assemblyinformationalversionattribute(v=vs.110).aspx).
+If the specified file has a `.cs` extension, it will be treated as an `AssemblyInfo.cs` file. As such, the version will be read from and written to assembly version attributes, which are: [`AssemblyVersion`](<http://msdn.microsoft.com/en-us/library/system.reflection.assemblyversionattribute(v=vs.110).aspx>), [`AssemblyFileVersion`](<http://msdn.microsoft.com/en-us/library/system.reflection.assemblyfileversionattribute(v=vs.110).aspx>) and [`AssemblyInformationalVersion`](<http://msdn.microsoft.com/en-us/library/system.reflection.assemblyinformationalversionattribute(v=vs.110).aspx>).
 
 To conform to the .NET Framework's specification, only the `AssemblyInformationalVersion` attribute will retain any prerelease version information, while the other two will be stripped of it, keeping just the version numbers.
 
@@ -123,8 +133,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
 ### Added
+
 - My new feature
+
 ### Fixed
+
 - An bug
 ```
