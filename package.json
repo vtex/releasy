@@ -1,6 +1,6 @@
 {
   "name": "releasy",
-  "version": "1.10.4",
+  "version": "1.10.5",
   "description": "CLI tool to release node applications with tag and auto semver bump",
   "main": "lib/releasy.js",
   "bin": "bin/releasy.js",
@@ -46,7 +46,6 @@
     "github-api": "^3.3.0",
     "js-yaml": "^3.13.1",
     "prompt": "~1.0.0",
-    "q": "~1.5.1",
     "semver": "^6.3.0",
     "shelljs": "~0.8.3"
   },

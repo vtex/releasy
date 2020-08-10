@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.10.5] - 2020-08-10
+### Changed
+- Remove `q` promise library in favor of native `Promise` object.
+
 ## [1.10.4] - 2020-08-10
 ### Fixed
 - Colored messages printed as `undefined`.
