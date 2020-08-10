@@ -3,16 +3,10 @@
   "env": {
     "es6": true,
     "jest": true,
-    "node": true,
-    "mocha": true
+    "node": true
   },
   "rules": {
     "global-require": "off",
-    "no-console": "off",
-    "jest/no-test-callback": "off",
-    "jest/expect-expect": "off",
-    "jest/valid-expect-in-promise": "off",
-    "jest/consistent-test-it": "off",
-    "jest/no-identical-title": "off"
+    "no-console": "off"
   }
 }

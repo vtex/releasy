@@ -1,15 +1,14 @@
 const { rm, cat } = require('shelljs')
 const semver = require('semver')
-const should = require('should')
 
 const CsharpVersionProvider = require('../lib/providers/csharp.js')
 const writeToFile = require('../lib/includes/writeToFile')
 
-describe('CsharpVersionProvider', function () {
-  after(() => rm('-rf', 'test/fixtures/AssemblyInfo.cs'))
+describe('CsharpVersionProvider', () => {
+  afterEach(() => rm('-rf', 'test/fixtures/AssemblyInfo.cs'))
 
-  describe('reading C# version', function () {
-    it('should return SemVer object from informational version', function (done) {
+  describe('reading C# version', () => {
+    it('should return SemVer object from informational version', () => {
       // arrange
       writeToFile(
         'test/fixtures/AssemblyInfo.cs',
@@ -27,12 +26,10 @@ describe('CsharpVersionProvider', function () {
       const version = provider.readVersion()
 
       // assert
-      should(version.format()).equal('1.2.3-beta.4')
-
-      return done()
+      expect(version.format()).toBe('1.2.3-beta.4')
     })
 
-    it('should fall back to file version', function (done) {
+    it('should fall back to file version', () => {
       // arrange
       writeToFile(
         'test/fixtures/AssemblyInfo.cs',
@@ -49,12 +46,10 @@ describe('CsharpVersionProvider', function () {
       const version = provider.readVersion()
 
       // assert
-      should(version.format()).equal('1.2.3')
-
-      return done()
+      expect(version.format()).toBe('1.2.3')
     })
 
-    it('should fall back to assembly version', function (done) {
+    it('should fall back to assembly version', () => {
       // arrange
       writeToFile(
         'test/fixtures/AssemblyInfo.cs',
@@ -70,12 +65,10 @@ describe('CsharpVersionProvider', function () {
       const version = provider.readVersion()
 
       // assert
-      should(version.format()).equal('1.2.3')
-
-      return done()
+      expect(version.format()).toBe('1.2.3')
     })
 
-    it('should throw an error if a version cannot be found', function (done) {
+    it('should throw an error if a version cannot be found', () => {
       // arrange
       writeToFile(
         'test/fixtures/AssemblyInfo.cs',
@@ -88,16 +81,14 @@ describe('CsharpVersionProvider', function () {
       )
 
       // act & assert
-      ;(() => provider.readVersion()).should.throw(
+      expect(() => provider.readVersion()).toThrow(
         'Could not find version information in file test/fixtures/AssemblyInfo.cs'
       )
-
-      return done()
     })
   })
 
-  describe('writing C# version', function () {
-    it('should accept SemVer object', function (done) {
+  describe('writing C# version', () => {
+    it('should accept SemVer object', () => {
       // arrange
       writeToFile(
         'test/fixtures/AssemblyInfo.cs',
@@ -115,18 +106,16 @@ describe('CsharpVersionProvider', function () {
       provider.writeVersion(semver('2.3.4-alpha.5'))
 
       // assert
-      should(cat('test/fixtures/AssemblyInfo.cs').toString()).equal(
+      expect(cat('test/fixtures/AssemblyInfo.cs').toString()).toBe(
         `\
 [assembly: AssemblyVersion("2.3.4")]
 [assembly: AssemblyFileVersion("2.3.4")]
 [assembly: AssemblyInformationalVersion("2.3.4-alpha.5")]\
 `
       )
-
-      return done()
     })
 
-    it('should accept string version', function (done) {
+    it('should accept string version', () => {
       // arrange
       writeToFile(
         'test/fixtures/AssemblyInfo.cs',
@@ -144,18 +133,16 @@ describe('CsharpVersionProvider', function () {
       provider.writeVersion('2.3.4-alpha.5')
 
       // assert
-      should(cat('test/fixtures/AssemblyInfo.cs').toString()).equal(
+      expect(cat('test/fixtures/AssemblyInfo.cs').toString()).toBe(
         `\
 [assembly: AssemblyVersion("2.3.4")]
 [assembly: AssemblyFileVersion("2.3.4")]
 [assembly: AssemblyInformationalVersion("2.3.4-alpha.5")]\
 `
       )
-
-      return done()
     })
 
-    it('should append missing version attributes', function (done) {
+    it('should append missing version attributes', () => {
       // arrange
       writeToFile(
         'test/fixtures/AssemblyInfo.cs',
@@ -172,7 +159,7 @@ describe('CsharpVersionProvider', function () {
       provider.writeVersion('2.3.4-alpha.5')
 
       // assert
-      should(cat('test/fixtures/AssemblyInfo.cs').toString()).equal(
+      expect(cat('test/fixtures/AssemblyInfo.cs').toString()).toBe(
         `\
 [assembly: AssemblyVersion("2.3.4")]
 // nothing else
@@ -181,11 +168,9 @@ describe('CsharpVersionProvider', function () {
 \
 `
       )
-
-      return done()
     })
 
-    it('should not mess line endings', function (done) {
+    it('should not mess line endings', () => {
       writeToFile(
         'test/fixtures/AssemblyInfo.cs',
         '// [assembly: AssemblyVersion("x.x.x")]\r\n[assembly: AssemblyVersion("2.3.5")]\r\n[assembly: AssemblyFileVersion("2.3.5")]\r\n[assembly: AssemblyInformationalVersion("2.3.5-beta.3")]\r\n'
@@ -199,14 +184,12 @@ describe('CsharpVersionProvider', function () {
       provider.writeVersion('2.3.4-alpha.5')
 
       // assert
-      should(cat('test/fixtures/AssemblyInfo.cs').toString()).equal(
+      expect(cat('test/fixtures/AssemblyInfo.cs').toString()).toBe(
         '// [assembly: AssemblyVersion("2.3.4")]\r\n[assembly: AssemblyVersion("2.3.4")]\r\n[assembly: AssemblyFileVersion("2.3.4")]\r\n[assembly: AssemblyInformationalVersion("2.3.4-alpha.5")]\r\n'
       )
-
-      return done()
     })
 
-    it('should append missing attributes without breaking extra line', function (done) {
+    it('should append missing attributes without breaking extra line', () => {
       // arrange
       writeToFile(
         'test/fixtures/AssemblyInfo.cs',
@@ -225,7 +208,7 @@ describe('CsharpVersionProvider', function () {
       provider.writeVersion('2.3.4-alpha.5')
 
       // assert
-      should(cat('test/fixtures/AssemblyInfo.cs').toString()).equal(
+      expect(cat('test/fixtures/AssemblyInfo.cs').toString()).toBe(
         `\
 // [assembly: AssemblyVersion("2.3.4")]
 [assembly: AssemblyVersion("2.3.4")]
@@ -234,26 +217,24 @@ describe('CsharpVersionProvider', function () {
 \
 `
       )
-
-      return done()
     })
   })
 
-  describe('file support', function () {
-    it('should support .cs extensions', function () {
+  describe('file support', () => {
+    it('should support .cs extensions', () => {
       // act
       const supports = CsharpVersionProvider.supports('somefile.cs')
 
       // assert
-      return should(supports).be.true()
+      return expect(supports).toBe(true)
     })
 
-    it('should not support any other extension', function () {
+    it('should not support any other extension', () => {
       // act
       const supports = CsharpVersionProvider.supports('arbitrary.extension')
 
       // assert
-      return should(supports).be.false()
+      return expect(supports).toBe(false)
     })
   })
 })

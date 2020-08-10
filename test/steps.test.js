@@ -1,38 +1,37 @@
-const should = require('should')
 const semver = require('semver')
-const { rm, cd, test } = require('shelljs')
+const { rm, cd, test: execTest } = require('shelljs')
 
 const steps = require('../lib/steps.js')
 const writeToFile = require('../lib/includes/writeToFile')
 
-describe('Steps', function () {
-  before(() => cd('test'))
+describe('Steps', () => {
+  beforeEach(() => cd('test'))
 
-  after(function () {
-    if (test('-e', 'package.json')) rm('-f', 'package.json')
-    if (test('-e', 'src/ProductAssemblyInfo.json')) rm('-f', 'package.json')
+  afterEach(() => {
+    if (execTest('-e', 'package.json')) rm('-f', 'package.json')
+    if (execTest('-e', 'src/ProductAssemblyInfo.json')) rm('-f', 'package.json')
     cd('..')
   })
 
-  describe('picking version provider', function () {
-    it('should pick first matching provider', function () {
+  describe('picking version provider', () => {
+    it('should pick first matching provider', () => {
       // arrange
 
       writeToFile('myversion.ext', '')
-      const p1 = function () {
-        return (this.name = 'p1')
+      const p1 = function Provider1() {
+        this.name = 'p1'
       }
 
       p1.supports = () => false
 
-      const p2 = function () {
-        return (this.name = 'p2')
+      const p2 = function Provider2() {
+        this.name = 'p2'
       }
 
       p2.supports = () => true
 
-      const p3 = function () {
-        return (this.name = 'p3')
+      const p3 = function Provider3() {
+        this.name = 'p3'
       }
 
       p3.supports = () => false
@@ -43,36 +42,34 @@ describe('Steps', function () {
       const provider = steps.pickVersionProvider('myversion.ext', providers)
 
       // assert
-      should(provider.name).equal('p2')
-
-      return rm('myversion.ext')
+      expect(provider.name).toBe('p2')
+      rm('myversion.ext')
     })
 
-    it('should throw error if a provider cannot be found', function () {
+    it('should throw error if a provider cannot be found', () => {
       // arrange
       writeToFile('myversion.bla', '')
       const providers = [{ supports: () => false }, { supports: () => false }]
 
       // act & assert
-      ;(() =>
-        steps.pickVersionProvider('myversion.bla', providers)).should.throw(
-        /^Unable to find a provider that supports/
-      )
+      expect(() =>
+        steps.pickVersionProvider('myversion.bla', providers)
+      ).toThrow(/^Unable to find a provider that supports/)
 
-      return rm('myversion.bla')
+      rm('myversion.bla')
     })
 
-    it('should throw error if file does not exist', function () {
+    it('should throw error if file does not exist', () => {
       // act & assert
-      ;(function () {
+      expect(
         // Force `manifest.json` to not be found.
-        return steps.pickVersionProvider('somedir/somejsonfile.json')
-      }.should.throw(/^Version file not found:/))
+        () => steps.pickVersionProvider('somedir/somejsonfile.json')
+      ).toThrow(/^Version file not found:/)
     })
   })
 
-  describe('setup', function () {
-    it('should not promote a stable version', function (done) {
+  describe('setup', () => {
+    it('should not promote a stable version', () => {
       // arrange
       const provider = {
         readVersion() {
@@ -81,12 +78,10 @@ describe('Steps', function () {
       }
 
       // act & assert
-      should(() => steps.setup(provider, 'promote', '')).throw()
-
-      return done()
+      expect(() => steps.setup(provider, 'promote', '')).toThrow()
     })
 
-    it('should set config', function (done) {
+    it('should set config', () => {
       // arrange
       const provider = {
         readVersion() {
@@ -98,14 +93,12 @@ describe('Steps', function () {
       const config = steps.setup(provider, 'patch', '')
 
       // assert
-      should(config.newVersion).equal('1.2.4')
-      should(config.oldVersion).equal('1.2.3')
-      should(config.versionProvider).equal(provider)
-
-      return done()
+      expect(config.newVersion).toBe('1.2.4')
+      expect(config.oldVersion).toBe('1.2.3')
+      expect(config.versionProvider).toBe(provider)
     })
 
-    it('should bump patch', function (done) {
+    it('should bump patch', () => {
       // arrange
       const provider = {
         readVersion() {
@@ -117,12 +110,10 @@ describe('Steps', function () {
       const config = steps.setup(provider, 'patch', '')
 
       // assert
-      should(config.newVersion).equal('1.2.4')
-
-      return done()
+      expect(config.newVersion).toBe('1.2.4')
     })
 
-    it('should bump minor', function (done) {
+    it('should bump minor', () => {
       // arrange
       const provider = {
         readVersion() {
@@ -134,12 +125,10 @@ describe('Steps', function () {
       const config = steps.setup(provider, 'minor', '')
 
       // assert
-      should(config.newVersion).equal('1.3.0')
-
-      return done()
+      expect(config.newVersion).toBe('1.3.0')
     })
 
-    it('should bump major', function (done) {
+    it('should bump major', () => {
       // arrange
       const provider = {
         readVersion() {
@@ -151,12 +140,10 @@ describe('Steps', function () {
       const config = steps.setup(provider, 'major', '')
 
       // assert
-      should(config.newVersion).equal('2.0.0')
-
-      return done()
+      expect(config.newVersion).toBe('2.0.0')
     })
 
-    it('should bump prerelease', function (done) {
+    it('should bump prerelease', () => {
       // arrange
       const provider = {
         readVersion() {
@@ -168,12 +155,10 @@ describe('Steps', function () {
       const config = steps.setup(provider, 'prerelease', '')
 
       // assert
-      should(config.newVersion).equal('1.2.3-beta.5')
-
-      return done()
+      expect(config.newVersion).toBe('1.2.3-beta.5')
     })
 
-    it('should create prerelease', function (done) {
+    it('should create prerelease', () => {
       // arrange
       const provider = {
         readVersion() {
@@ -185,12 +170,10 @@ describe('Steps', function () {
       const config = steps.setup(provider, 'patch', 'beta')
 
       // assert
-      should(config.newVersion).equal('1.2.4-beta')
-
-      return done()
+      expect(config.newVersion).toBe('1.2.4-beta')
     })
 
-    it('should promote prerelease', function (done) {
+    it('should promote prerelease', () => {
       // arrange
       const provider = {
         readVersion() {
@@ -202,14 +185,12 @@ describe('Steps', function () {
       const config = steps.setup(provider, 'promote', '')
 
       // assert
-      should(config.newVersion).equal('1.2.3')
-
-      return done()
+      expect(config.newVersion).toBe('1.2.3')
     })
   })
 
-  describe('get options file', function () {
-    it('should use _releasy.yaml file', function (done) {
+  describe('get options file', () => {
+    it('should use _releasy.yaml file', () => {
       // arrange
       writeToFile(
         '_releasy.yaml',
@@ -223,12 +204,10 @@ default: major\
 
       // assert
       rm('_releasy.yaml')
-      should(options.default).equal('major')
-
-      return done()
+      expect(options.default).toBe('major')
     })
 
-    it('should use _releasy.yml file', function (done) {
+    it('should use _releasy.yml file', () => {
       // arrange
       writeToFile(
         '_releasy.yml',
@@ -242,12 +221,10 @@ default: major\
 
       // assert
       rm('_releasy.yml')
-      should(options.default).equal('major')
-
-      return done()
+      expect(options.default).toBe('major')
     })
 
-    it('should use _releasy.json file', function (done) {
+    it('should use _releasy.json file', () => {
       // arrange
       writeToFile(
         '_releasy.json',
@@ -263,19 +240,15 @@ default: major\
 
       // assert
       rm('_releasy.json')
-      should(options.default).equal('major')
-
-      return done()
+      expect(options.default).toBe('major')
     })
 
-    it('should return empty object if no file is found', function (done) {
+    it('should return empty object if no file is found', () => {
       // act
       const options = steps.getOptionsFile()
 
       // assert
-      should(options).be.empty()
-
-      return done()
+      expect(options).toEqual({})
     })
   })
 })

@@ -2,7 +2,6 @@ const path = require('path')
 
 const { rm, cat } = require('shelljs')
 const semver = require('semver')
-const should = require('should')
 
 const NodeVersionProvider = require('../lib/providers/node.js')
 const writeToFile = require('../lib/includes/writeToFile.js')
@@ -10,11 +9,11 @@ const writeToFile = require('../lib/includes/writeToFile.js')
 const createPackageJson = (filePath, pkg) =>
   writeToFile(path.resolve(`./${filePath}`), JSON.stringify(pkg))
 
-describe('NodeVersionProvider', function () {
-  after(() => rm('-rf', path.resolve('test/fixtures/package.json')))
+describe('NodeVersionProvider', () => {
+  afterEach(() => rm('-rf', path.resolve('test/fixtures/package.json')))
 
-  describe('reading node version', function () {
-    it('should return SemVer object', function (done) {
+  describe('reading node version', () => {
+    it('should return SemVer object', () => {
       // arrange
       createPackageJson('test/fixtures/package.json', {
         version: '1.2.3-beta.4',
@@ -25,27 +24,21 @@ describe('NodeVersionProvider', function () {
       const version = provider.readVersion()
 
       // assert
-      should(version.format()).equal('1.2.3-beta.4')
-
-      return done()
+      expect(version.format()).toBe('1.2.3-beta.4')
     })
 
-    it('should throw error for version in incorrect format', function (done) {
+    it('should throw error for version in incorrect format', () => {
       // arrange
       createPackageJson('test/fixtures/package.json', { version: 'blabla' })
       const provider = new NodeVersionProvider('test/fixtures/package.json')
 
       // act & assert
-      ;(function () {
-        return provider.readVersion()
-      }.should.throw())
-
-      return done()
+      expect(() => provider.readVersion()).toThrow()
     })
   })
 
-  describe('writing node version', function () {
-    it('should accept SemVer object', function (done) {
+  describe('writing node version', () => {
+    it('should accept SemVer object', () => {
       // arrange
       createPackageJson('test/fixtures/package.json', { version: '0.1.0' })
       const provider = new NodeVersionProvider('test/fixtures/package.json')
@@ -55,14 +48,12 @@ describe('NodeVersionProvider', function () {
       provider.writeVersion(newVersion)
 
       // assert
-      should(JSON.parse(cat('test/fixtures/package.json')).version).equal(
+      expect(JSON.parse(cat('test/fixtures/package.json')).version).toBe(
         '0.2.0'
       )
-
-      return done()
     })
 
-    it('should accept string version', function (done) {
+    it('should accept string version', () => {
       // arrange
       createPackageJson('test/fixtures/package.json', { version: '0.1.0' })
       const provider = new NodeVersionProvider('test/fixtures/package.json')
@@ -71,29 +62,27 @@ describe('NodeVersionProvider', function () {
       provider.writeVersion('0.3.0')
 
       // assert
-      should(JSON.parse(cat('test/fixtures/package.json')).version).equal(
+      expect(JSON.parse(cat('test/fixtures/package.json')).version).toBe(
         '0.3.0'
       )
-
-      return done()
     })
   })
 
-  describe('file support', function () {
-    it('should support .json extensions', function () {
+  describe('file support', () => {
+    it('should support .json extensions', () => {
       // act
       const supports = NodeVersionProvider.supports('mypackage.json')
 
       // assert
-      return should(supports).be.true()
+      expect(supports).toBe(true)
     })
 
-    it('should not support any other extension', function () {
+    it('should not support any other extension', () => {
       // act
       const supports = NodeVersionProvider.supports('arbitrary.extension')
 
       // assert
-      return should(supports).be.false()
+      expect(supports).toBe(false)
     })
   })
 })
