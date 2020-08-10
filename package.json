@@ -1,11 +1,12 @@
 {
   "name": "releasy",
-  "version": "1.10.2",
+  "version": "1.10.3",
   "description": "CLI tool to release node applications with tag and auto semver bump",
   "main": "lib/releasy.js",
   "bin": "bin/releasy.js",
   "scripts": {
-    "test": "node_modules/.bin/mocha --compilers coffee:coffee-script/register"
+    "test": "mocha",
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",
@@ -23,27 +24,42 @@
     "url": "https://github.com/vtex/releasy/issues"
   },
   "homepage": "https://github.com/vtex/releasy",
-  "dependencies": {
-    "camelcase": "^4.0.0",
-    "commander": "^3.0.2",
-    "github-api": "^3.0.0",
-    "js-yaml": "^3.6.1",
-    "prompt": "~0.3.0",
-    "q": "~1.4.1",
-    "semver": "^5.2.0",
-    "shelljs": "~0.6.0"
-  },
-  "preferGlobal": true,
-  "devDependencies": {
-    "coffeescript": "^2.3.1",
-    "mocha": "^5.2.0",
-    "should": "~3.3.1",
-    "sinon": "~1.17.3"
-  },
-  "coffeelintConfig": {
-    "max_line_length": {
-      "name": "max_line_length",
-      "value": "120"
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "pre-push": "yarn lint && yarn test"
     }
+  },
+  "lint-staged": {
+    "*.{ts,js,tsx,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.json": [
+      "prettier --write"
+    ]
+  },
+  "dependencies": {
+    "camelcase": "^5.3.1",
+    "chalk": "^2.4.2",
+    "commander": "~3.0.2",
+    "github-api": "^3.3.0",
+    "js-yaml": "^3.13.1",
+    "prompt": "~1.0.0",
+    "q": "~1.5.1",
+    "semver": "^6.3.0",
+    "shelljs": "~0.8.3"
+  },
+  "devDependencies": {
+    "@vtex/prettier-config": "^0.3.1",
+    "eslint": "^7.6.0",
+    "eslint-config-vtex": "^12.8.2",
+    "husky": "^4.2.5",
+    "lint-staged": "^10.2.11",
+    "mocha": "^6.2.1",
+    "prettier": "^2.0.5",
+    "should": "^13.2.3",
+    "sinon": "~7.5.0",
+    "typescript": "^3.9.7"
   }
 }
