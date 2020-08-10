@@ -1,5 +1,6 @@
 const should = require('should')
 const sinon = require('sinon')
+
 const Releasy = require('../lib/releasy.js')
 const steps = require('../lib/steps.js')
 
@@ -40,7 +41,7 @@ describe('releasy', () => {
 
     const releasy = Releasy(options)
 
-    releasy.then(function() {
+    releasy.then(function () {
       should(steps.setup.called).be.true
       should(steps.setup.firstCall.returnValue.newVersion).equal('1.0.1')
       should(steps.release.called).be.true
@@ -48,8 +49,10 @@ describe('releasy', () => {
       should(steps.postReleasy.called).be.true
       should(steps.scripts.called).be.true
       should(steps.spawn.args[0][0]).equal('echo pre')
+
       return should(steps.spawn.args[1][0]).equal('echo post')
     })
+
     return releasy.fail
   })
 
@@ -71,7 +74,7 @@ describe('releasy', () => {
 
     const releasy = Releasy(options)
 
-    releasy.then(function() {
+    releasy.then(function () {
       should(steps.setup.called).be.true
       should(steps.setup.firstCall.returnValue.newVersion).equal('2.0.1')
       should(steps.release.called).be.true
@@ -79,12 +82,14 @@ describe('releasy', () => {
       should(steps.postReleasy.called).be.true
       should(steps.scripts.called).be.true
       should(steps.spawn.args[0][0]).equal('echo pre')
+
       return should(steps.spawn.args[1][0]).equal('echo post')
     })
+
     return releasy.fail
   })
 
-  return it("should default to manifest.json when file doesn't exist", () => {
+  it("should default to manifest.json when file doesn't exist", () => {
     const options = {
       dryRun: true,
       filename: 'test/fixtures/package.json',
@@ -102,7 +107,7 @@ describe('releasy', () => {
 
     const releasy = Releasy(options)
 
-    releasy.then(function() {
+    releasy.then(function () {
       should(steps.setup.called).be.true
       should(steps.setup.firstCall.returnValue.newVersion).equal('2.0.1')
       should(steps.release.called).be.true
@@ -113,8 +118,10 @@ describe('releasy', () => {
       should(steps.postReleasy.called).be.true
       should(steps.scripts.called).be.true
       should(steps.spawn.args[0][0]).equal('echo pre')
+
       return should(steps.spawn.args[1][0]).equal('echo post')
     })
+
     return releasy.fail
   })
 })
