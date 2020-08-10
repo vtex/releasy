@@ -6,7 +6,7 @@
   "bin": "bin/releasy.js",
   "scripts": {
     "test": "mocha",
-    "lint": "prettier --loglevel silent --write \"{lib,bin,test}/**/*.js\" && eslint --fix \"{lib,bin,test}/**/*.js\""
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",
@@ -26,8 +26,18 @@
   "homepage": "https://github.com/vtex/releasy",
   "husky": {
     "hooks": {
+      "pre-commit": "lint-staged",
       "pre-push": "yarn lint && yarn test"
     }
+  },
+  "lint-staged": {
+    "*.{ts,js,tsx,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.json": [
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "camelcase": "^5.3.1",
@@ -41,13 +51,15 @@
     "shelljs": "~0.8.3"
   },
   "devDependencies": {
-    "eslint": "^6.5.1",
-    "eslint-config-prettier": "^6.4.0",
-    "eslint-config-vtex": "^11.1.0",
-    "husky": "^3.0.8",
+    "@vtex/prettier-config": "^0.3.1",
+    "eslint": "^7.6.0",
+    "eslint-config-vtex": "^12.8.2",
+    "husky": "^4.2.5",
+    "lint-staged": "^10.2.11",
     "mocha": "^6.2.1",
-    "prettier": "^1.18.2",
+    "prettier": "^2.0.5",
     "should": "^13.2.3",
-    "sinon": "~7.5.0"
+    "sinon": "~7.5.0",
+    "typescript": "^3.9.7"
   }
 }
