@@ -54,6 +54,7 @@ for (let [key, value] of Object.entries(optionsFile)) {
     key = key.slice(3, key.length)
     value = !value
   }
+
   program[camelCase(key)] = value
 }
 
