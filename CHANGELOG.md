@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Flag `--otp` to handle NPM two-factor authentication.
 
 ## [1.10.5] - 2020-08-10
 ### Changed
