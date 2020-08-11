@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Flag `--otp` to handle NPM two-factor authentication.
 
+### Fixed
+- Error when trying to push an inexistent tag (with `releasy --no-tag`).
+
 ## [1.10.5] - 2020-08-10
 ### Changed
 - Remove `q` promise library in favor of native `Promise` object.
