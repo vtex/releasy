@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.11.1] - 2020-08-26
+### Fixed
+- `camelcase` package require.
+
 ## [1.11.0] - 2020-08-12
 ### Added
 - Flag `--otp` to handle NPM two-factor authentication.

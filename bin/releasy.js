@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 const program = require('commander')
-const camelCase = require('camelCase')
+const camelCase = require('camelcase')
 
 const releasy = require('../lib/releasy')
 const pkg = require('../package.json')
