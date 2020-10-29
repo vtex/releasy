@@ -149,4 +149,25 @@ describe('releasy', () => {
       )
     })
   })
+
+  it('should use the package name', () => {
+    const options = {
+      dryRun: true,
+      filename: 'test/fixtures/testpackage.json',
+      type: 'patch',
+      steps,
+      quiet: true,
+      displayName: true,
+    }
+
+    const setupSpy = jest.spyOn(steps, 'setup')
+    const releasy = Releasy(options)
+
+    return releasy.then(() => {
+      expect(setupSpy).toHaveBeenCalled()
+      expect(setupSpy).toHaveReturnedWith(
+        expect.objectContaining({ tagName: 'v1.0.1 of releasy' })
+      )
+    })
+  })
 })

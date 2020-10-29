@@ -101,6 +101,7 @@ dry-run: true # always use dry-run mode
 no-tag: true # don't tag the release commit
 no-push: true # don't push to the remote repository
 no-commit: true # don't create the release commit
+display-name: true # add the project name to the tag and release commit
 # etc
 ```
 
