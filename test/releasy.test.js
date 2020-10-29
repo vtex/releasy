@@ -1,8 +1,12 @@
+const { rm } = require('shelljs')
+
 const Releasy = require('../lib/releasy.js')
 const steps = require('../lib/steps.js')
+const { createPackageJson, MANIFEST } = require('./utils')
 
 describe('releasy', () => {
   afterEach(() => {
+    rm('-f', 'test/fixtures/manifest.json')
     jest.restoreAllMocks()
   })
 
@@ -11,6 +15,8 @@ describe('releasy', () => {
   })
 
   it('should call all steps in dry run', () => {
+    createPackageJson('test/fixtures/manifest.json', MANIFEST)
+
     const options = {
       dryRun: true,
       filename: 'test/fixtures/testpackage.json',
@@ -55,6 +61,8 @@ describe('releasy', () => {
   })
 
   it('should call all steps in dry run using manifest', () => {
+    createPackageJson('test/fixtures/manifest.json', MANIFEST)
+
     const options = {
       dryRun: true,
       filename: 'test/fixtures/testversionnull.json',
@@ -99,6 +107,8 @@ describe('releasy', () => {
   })
 
   it("should default to manifest.json when file doesn't exist", () => {
+    createPackageJson('test/fixtures/manifest.json', MANIFEST)
+
     const options = {
       dryRun: true,
       filename: 'test/fixtures/package.json',
