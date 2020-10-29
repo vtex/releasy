@@ -36,6 +36,11 @@ program
   .option('--no-tag', 'Do not tag the version change', false)
   .option('--no-push', 'Do not push changes to remote', false)
   .option(
+    '--display-name',
+    'Add the project name to the tag and release commit',
+    false
+  )
+  .option(
     '--notes',
     'Publish notes to GitHub Release Notes. Personal Token is required to use this option',
     false
