@@ -3,11 +3,8 @@ const path = require('path')
 const { rm, cat } = require('shelljs')
 const semver = require('semver')
 
+const { createPackageJson } = require('./utils.js')
 const NodeVersionProvider = require('../lib/providers/node.js')
-const writeToFile = require('../lib/includes/writeToFile.js')
-
-const createPackageJson = (filePath, pkg) =>
-  writeToFile(path.resolve(`./${filePath}`), JSON.stringify(pkg))
 
 const CUSTOM_MANIFEST_PATH = 'test/fixtures/manifest.json'
 
