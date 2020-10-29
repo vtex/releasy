@@ -85,4 +85,34 @@ describe('NodeVersionProvider', () => {
       expect(supports).toBe(false)
     })
   })
+
+  describe('reading node name', () => {
+    it('should return name', () => {
+      const name = 'TestName'
+
+      // arrange
+      createPackageJson('test/fixtures/package.json', {
+        name,
+        version: '1.2.3-beta.4',
+      })
+      const provider = new NodeVersionProvider('test/fixtures/package.json')
+
+      // act
+      const resultName = provider.readName()
+
+      // assert
+      expect(resultName).toBe(name)
+    })
+
+    it('should throw error name', () => {
+      // arrange
+      createPackageJson('test/fixtures/package.json', {
+        version: '1.2.3-beta.4',
+      })
+      const provider = new NodeVersionProvider('test/fixtures/package.json')
+
+      // act & assert
+      expect(() => provider.readName()).toThrow()
+    })
+  })
 })
