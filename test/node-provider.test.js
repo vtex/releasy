@@ -9,8 +9,13 @@ const writeToFile = require('../lib/includes/writeToFile.js')
 const createPackageJson = (filePath, pkg) =>
   writeToFile(path.resolve(`./${filePath}`), JSON.stringify(pkg))
 
+const CUSTOM_MANIFEST_PATH = 'test/fixtures/manifest.json'
+
 describe('NodeVersionProvider', () => {
-  afterEach(() => rm('-rf', path.resolve('test/fixtures/package.json')))
+  afterEach(() => {
+    rm('-rf', path.resolve('test/fixtures/package.json'))
+    rm('-rf', path.resolve(CUSTOM_MANIFEST_PATH))
+  })
 
   describe('reading node version', () => {
     it('should return SemVer object', () => {
@@ -87,21 +92,41 @@ describe('NodeVersionProvider', () => {
   })
 
   describe('reading node name', () => {
-    it('should return name', () => {
+    it('should return name without vendor', () => {
       const name = 'TestName'
 
       // arrange
-      createPackageJson('test/fixtures/package.json', {
+      createPackageJson(CUSTOM_MANIFEST_PATH, {
         name,
         version: '1.2.3-beta.4',
       })
-      const provider = new NodeVersionProvider('test/fixtures/package.json')
+      const provider = new NodeVersionProvider(CUSTOM_MANIFEST_PATH)
 
       // act
       const resultName = provider.readName()
 
       // assert
       expect(resultName).toBe(name)
+    })
+
+    it('should return name with vendor', () => {
+      const name = 'TestName'
+      const vendor = 'test'
+      const filePath = 'test/fixtures/manifest.json'
+
+      // arrange
+      createPackageJson(filePath, {
+        vendor,
+        name,
+        version: '1.2.3-beta.4',
+      })
+      const provider = new NodeVersionProvider(filePath)
+
+      // act
+      const resultName = provider.readName()
+
+      // assert
+      expect(resultName).toBe(`${vendor}.${name}`)
     })
 
     it('should throw error name', () => {
