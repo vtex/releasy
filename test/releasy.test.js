@@ -176,7 +176,7 @@ describe('releasy', () => {
     return releasy.then(() => {
       expect(setupSpy).toHaveBeenCalled()
       expect(setupSpy).toHaveReturnedWith(
-        expect.objectContaining({ tagName: 'v1.0.1 of releasy' })
+        expect.objectContaining({ tagName: 'releasy@1.0.1' })
       )
     })
   })
