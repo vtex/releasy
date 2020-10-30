@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 ### Added
-- `display-name` option to the Release message.
+- `display-name` option to the release message.
  
 ## [1.11.1] - 2020-08-26
 ### Fixed
