@@ -69,7 +69,7 @@ $ releasy --stable # 1.2.3 => 1.2.4
 To apply a **custom prerelease identifier**:
 
 ```sh
-$ releasy --tag alpha # 1.2.3 => 1.2.4-alpha
+$ releasy --tag-name alpha # 1.2.3 => 1.2.4-alpha
 ```
 
 If you want to **post the release notes on GitHub**, use the `--notes` option:
