@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.13.0] - 2021-02-10
+### Added
+- `--no-prefix` option to the ignore the prefix "v" for version.
+
 ## [1.12.0] - 2020-11-04
 ### Added
 - `display-name` option to the release message.

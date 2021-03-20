@@ -53,6 +53,7 @@ program
   )
   .option('-s, --silent', 'Dont ask for confirmation', false)
   .option('-q, --quiet', "Don't write messages to console", false)
+  .option('--no-prefix', 'Ignore version prefix', false)
   .parse(args)
 
 for (let [key, value] of Object.entries(optionsFile)) {
