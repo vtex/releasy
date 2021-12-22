@@ -94,3 +94,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Update `CHANGELOG.md` when exists and post a Release Notes in github repository
+
+[Unreleased]: https://github.com/vtex/releasy/compare/v1.12.1...HEAD
+[1.12.1]: https://github.com/vtex/releasy/compare/v1.12.0...v1.12.1
+[1.12.0]: https://github.com/vtex/releasy/compare/v1.11.1...v1.12.0
+[1.11.1]: https://github.com/vtex/releasy/compare/v1.11.0...v1.11.1
+[1.11.0]: https://github.com/vtex/releasy/compare/v1.10.5...v1.11.0
+[1.10.5]: https://github.com/vtex/releasy/compare/v1.10.4...v1.10.5
+[1.10.4]: https://github.com/vtex/releasy/compare/v1.10.3...v1.10.4
+[1.10.3]: https://github.com/vtex/releasy/compare/v1.10.2...v1.10.3
+[1.10.2]: https://github.com/vtex/releasy/compare/v1.10.1...v1.10.2
+[1.10.1]: https://github.com/vtex/releasy/compare/v1.10.0...v1.10.1
+[1.10.0]: https://github.com/vtex/releasy/compare/v1.9.1...v1.10.0
+[1.9.1]: https://github.com/vtex/releasy/compare/v1.9.0...v1.9.1
+[1.9.0]: https://github.com/vtex/releasy/compare/v1.8.2...v1.9.0
+[1.8.2]: https://github.com/vtex/releasy/compare/v1.8.1...v1.8.2
+[1.8.1]: https://github.com/vtex/releasy/compare/v1.8.0...v1.8.1
+[1.8.0]: https://github.com/vtex/releasy/compare/v1.7.3...v1.8.0
