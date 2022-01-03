@@ -57,7 +57,7 @@
     "eslint-config-vtex": "^14.1.2",
     "husky": "^4.2.5",
     "lint-staged": "^10.2.11",
-    "mock-fs": "^4.12.0",
+    "mock-fs": "^5.1.2",
     "prettier": "^2.5.1",
     "typescript": "^3.9.7"
   }

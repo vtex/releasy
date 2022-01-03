@@ -94,7 +94,7 @@ describe('Steps', () => {
 
       // assert
       expect(config.newVersion).toBe('1.2.4')
-      expect(config.oldVersion).toBe('1.2.3')
+      expect(config.currentVersion).toBe('1.2.3')
       expect(config.versionProvider).toBe(provider)
     })
 
