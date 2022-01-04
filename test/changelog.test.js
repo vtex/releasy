@@ -109,18 +109,21 @@ describe('Changelog', () => {
 
       const changelogContent = (await fs.readFile('./CHANGELOG.md')).toString()
 
-      expect(changelogContent).toMatchInlineSnapshot(`
-        "
-        ## [Unreleased]
+      const [year, month, day] = new Date()
+        .toISOString()
+        .split('T')[0]
+        .split('-')
 
-        ## [0.1.0] - 2022-01-03
-        ### Added
-        - My first feature
+      expect(changelogContent).toMatch(`
+## [Unreleased]
+
+## [0.1.0] - ${year}-${month}-${day}
+### Added
+- My first feature
 
 
-        [Unreleased]: https://github.com/my-org/my-repo/compare/v0.1.0...HEAD
-        [0.1.0]: https://github.com/my-org/my-repo/compare/v0.0.0...v0.1.0"
-      `)
+[Unreleased]: https://github.com/my-org/my-repo/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/my-org/my-repo/compare/v0.0.0...v0.1.0`)
     })
   })
 
