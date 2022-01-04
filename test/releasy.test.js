@@ -1,4 +1,4 @@
-const { rm } = require('shelljs')
+const fs = require('fs')
 
 const Releasy = require('../lib/releasy.js')
 const steps = require('../lib/steps.js')
@@ -6,12 +6,9 @@ const { createPackageJson, MANIFEST } = require('./utils')
 
 describe('releasy', () => {
   afterEach(() => {
-    rm('-f', 'test/fixtures/manifest.json')
+    if (fs.existsSync('test/fixtures/manifest.json'))
+      fs.unlinkSync('test/fixtures/manifest.json')
     jest.restoreAllMocks()
-  })
-
-  it('should exist', () => {
-    expect(Releasy).toBeTruthy()
   })
 
   it('should call all steps in dry run', () => {

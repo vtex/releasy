@@ -1,11 +1,15 @@
-const { rm, cat } = require('shelljs')
+const fs = require('fs')
+
 const semver = require('semver')
 
 const CsharpVersionProvider = require('../lib/providers/csharp.js')
 const writeToFile = require('../lib/includes/writeToFile')
 
 describe('CsharpVersionProvider', () => {
-  afterEach(() => rm('-rf', 'test/fixtures/AssemblyInfo.cs'))
+  afterEach(() => {
+    if (fs.existsSync('test/fixtures/AssemblyInfo.cs'))
+      fs.unlinkSync('test/fixtures/AssemblyInfo.cs')
+  })
 
   describe('reading C# version', () => {
     it('should return SemVer object from informational version', () => {
@@ -106,7 +110,7 @@ describe('CsharpVersionProvider', () => {
       provider.writeVersion(semver('2.3.4-alpha.5'))
 
       // assert
-      expect(cat('test/fixtures/AssemblyInfo.cs').toString()).toBe(
+      expect(fs.readFileSync('test/fixtures/AssemblyInfo.cs').toString()).toBe(
         `\
 [assembly: AssemblyVersion("2.3.4")]
 [assembly: AssemblyFileVersion("2.3.4")]
@@ -133,7 +137,7 @@ describe('CsharpVersionProvider', () => {
       provider.writeVersion('2.3.4-alpha.5')
 
       // assert
-      expect(cat('test/fixtures/AssemblyInfo.cs').toString()).toBe(
+      expect(fs.readFileSync('test/fixtures/AssemblyInfo.cs').toString()).toBe(
         `\
 [assembly: AssemblyVersion("2.3.4")]
 [assembly: AssemblyFileVersion("2.3.4")]
@@ -159,7 +163,7 @@ describe('CsharpVersionProvider', () => {
       provider.writeVersion('2.3.4-alpha.5')
 
       // assert
-      expect(cat('test/fixtures/AssemblyInfo.cs').toString()).toBe(
+      expect(fs.readFileSync('test/fixtures/AssemblyInfo.cs').toString()).toBe(
         `\
 [assembly: AssemblyVersion("2.3.4")]
 // nothing else
@@ -184,7 +188,7 @@ describe('CsharpVersionProvider', () => {
       provider.writeVersion('2.3.4-alpha.5')
 
       // assert
-      expect(cat('test/fixtures/AssemblyInfo.cs').toString()).toBe(
+      expect(fs.readFileSync('test/fixtures/AssemblyInfo.cs').toString()).toBe(
         '// [assembly: AssemblyVersion("2.3.4")]\r\n[assembly: AssemblyVersion("2.3.4")]\r\n[assembly: AssemblyFileVersion("2.3.4")]\r\n[assembly: AssemblyInformationalVersion("2.3.4-alpha.5")]\r\n'
       )
     })
@@ -208,7 +212,7 @@ describe('CsharpVersionProvider', () => {
       provider.writeVersion('2.3.4-alpha.5')
 
       // assert
-      expect(cat('test/fixtures/AssemblyInfo.cs').toString()).toBe(
+      expect(fs.readFileSync('test/fixtures/AssemblyInfo.cs').toString()).toBe(
         `\
 // [assembly: AssemblyVersion("2.3.4")]
 [assembly: AssemblyVersion("2.3.4")]

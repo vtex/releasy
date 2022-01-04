@@ -1,6 +1,6 @@
 const path = require('path')
+const fs = require('fs')
 
-const { rm, cat } = require('shelljs')
 const semver = require('semver')
 
 const { createPackageJson } = require('./utils.js')
@@ -10,8 +10,11 @@ const CUSTOM_MANIFEST_PATH = 'test/fixtures/manifest.json'
 
 describe('NodeVersionProvider', () => {
   afterEach(() => {
-    rm('-rf', path.resolve('test/fixtures/package.json'))
-    rm('-rf', path.resolve(CUSTOM_MANIFEST_PATH))
+    if (fs.existsSync('test/fixtures/package.json'))
+      fs.unlinkSync(path.resolve('test/fixtures/package.json'))
+
+    if (fs.existsSync(CUSTOM_MANIFEST_PATH))
+      fs.unlinkSync(path.resolve(CUSTOM_MANIFEST_PATH))
   })
 
   describe('reading node version', () => {
@@ -50,9 +53,9 @@ describe('NodeVersionProvider', () => {
       provider.writeVersion(newVersion)
 
       // assert
-      expect(JSON.parse(cat('test/fixtures/package.json')).version).toBe(
-        '0.2.0'
-      )
+      expect(
+        JSON.parse(fs.readFileSync('test/fixtures/package.json')).version
+      ).toBe('0.2.0')
     })
 
     it('should accept string version', () => {
@@ -64,9 +67,9 @@ describe('NodeVersionProvider', () => {
       provider.writeVersion('0.3.0')
 
       // assert
-      expect(JSON.parse(cat('test/fixtures/package.json')).version).toBe(
-        '0.3.0'
-      )
+      expect(
+        JSON.parse(fs.readFileSync('test/fixtures/package.json')).version
+      ).toBe('0.3.0')
     })
   })
 

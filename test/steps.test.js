@@ -1,16 +1,18 @@
+const fs = require('fs')
+
 const semver = require('semver')
-const { rm, cd, test: execTest } = require('shelljs')
 
 const steps = require('../lib/steps.js')
 const writeToFile = require('../lib/includes/writeToFile')
 
 describe('Steps', () => {
-  beforeEach(() => cd('test'))
+  beforeEach(() => process.chdir('test'))
 
   afterEach(() => {
-    if (execTest('-e', 'package.json')) rm('-f', 'package.json')
-    if (execTest('-e', 'src/ProductAssemblyInfo.json')) rm('-f', 'package.json')
-    cd('..')
+    if (fs.existsSync('package.json')) fs.unlinkSync('package.json')
+    if (fs.existsSync('src/ProductAssemblyInfo.json'))
+      fs.unlinkSync('package.json')
+    process.chdir('..')
   })
 
   describe('picking version provider', () => {
@@ -43,7 +45,7 @@ describe('Steps', () => {
 
       // assert
       expect(provider.name).toBe('p2')
-      rm('myversion.ext')
+      fs.unlinkSync('myversion.ext')
     })
 
     it('should throw error if a provider cannot be found', () => {
@@ -56,15 +58,19 @@ describe('Steps', () => {
         steps.pickVersionProvider('myversion.bla', providers)
       ).toThrow(/^Unable to find a provider that supports/)
 
-      rm('myversion.bla')
+      fs.unlinkSync('myversion.bla')
     })
 
     it('should throw error if file does not exist', () => {
-      // act & assert
+      const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation()
+
       expect(
         // Force `manifest.json` to not be found.
         () => steps.pickVersionProvider('somedir/somejsonfile.json')
       ).toThrow(/^Version file not found:/)
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        "ENOENT: no such file or directory, open 'somedir/somejsonfile.json'"
+      )
     })
   })
 
@@ -203,7 +209,7 @@ default: major\
       const options = steps.getOptionsFile()
 
       // assert
-      rm('_releasy.yaml')
+      fs.unlinkSync('_releasy.yaml')
       expect(options.default).toBe('major')
     })
 
@@ -220,7 +226,7 @@ default: major\
       const options = steps.getOptionsFile()
 
       // assert
-      rm('_releasy.yml')
+      fs.unlinkSync('_releasy.yml')
       expect(options.default).toBe('major')
     })
 
@@ -239,7 +245,7 @@ default: major\
       const options = steps.getOptionsFile()
 
       // assert
-      rm('_releasy.json')
+      fs.unlinkSync('_releasy.json')
       expect(options.default).toBe('major')
     })
 
