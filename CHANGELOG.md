@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [1.13.1] - 2022-01-11
 ### Changed
 - Removed `shelljs` dependency.
 
@@ -101,7 +103,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Update `CHANGELOG.md` when exists and post a Release Notes in github repository
 
-[Unreleased]: https://github.com/vtex/releasy/compare/v1.13.0...HEAD
+[Unreleased]: https://github.com/vtex/releasy/compare/v1.13.1...HEAD
+[1.13.1]: https://github.com/vtex/releasy/compare/v1.13.0...v1.13.1
 [1.13.0]: https://github.com/vtex/releasy/compare/v1.12.1...v1.13.0
 [1.12.1]: https://github.com/vtex/releasy/compare/v1.12.0...v1.12.1
 [1.12.0]: https://github.com/vtex/releasy/compare/v1.11.1...v1.12.0
