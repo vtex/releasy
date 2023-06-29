@@ -46,7 +46,7 @@
     "github-api": "^3.3.0",
     "js-yaml": "^3.13.1",
     "prompt": "^1.2.0",
-    "semver": "^6.3.0"
+    "semver": "^7.5.2"
   },
   "devDependencies": {
     "@types/jest": "^26.0.9",
